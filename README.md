@@ -1,0 +1,21 @@
+# Gerrit Dev Tool
+
+[![PyPI - Version](https://img.shields.io/pypi/v/gerrit-dev-tool.svg)](https://pypi.org/project/gerrit-dev-tool)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gerrit-dev-tool.svg)](https://pypi.org/project/gerrit-dev-tool)
+
+-----
+
+**Table of Contents**
+
+- [Installation](#installation)
+- [License](#license)
+
+## Installation
+
+```console
+pip install gerrit-dev-tool
+```
+
+## License
+
+`gerrit-dev-tool` is distributed under the terms of the [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html) license.
