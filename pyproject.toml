@@ -34,7 +34,7 @@ Issues = "https://github.com/unknown/gerrit-dev-tool/issues"
 Source = "https://github.com/unknown/gerrit-dev-tool"
 
 [project.scripts]
-gerrit-dev-tool = "gerrit_dev_tool.cli:gerrit_dev_tool"
+grdt = "gerrit_dev_tool.cli:gerrit_dev_tool"
 
 [tool.hatch.version]
 path = "src/gerrit_dev_tool/__about__.py"
