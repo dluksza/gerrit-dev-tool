@@ -25,3 +25,6 @@ class GerritWorktree:
 
     def clean_external_plugin_deps(self):
         subprocess.run(["git", "--git-dir", self._dot_git, "restore", "plugins/external_plugin_deps.bzl"], check=True)
+
+    def clean_tools_plugins(self):
+        subprocess.run(["git", "--git-dir", self._dot_git, "restore", "tools/bzl/plugins.bzl"], check=True)

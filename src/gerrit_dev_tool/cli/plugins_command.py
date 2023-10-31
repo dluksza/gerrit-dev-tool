@@ -51,7 +51,7 @@ def uninstall(root_cfg, name):
 @click.argument("name")
 @pass_root_config
 def test(root_cfg):
-    """Run plugin tests"""
+    """Run plugin tests."""
     click.echo("test plugin to gerrit")
 
 
@@ -66,9 +66,9 @@ def deploy(root_cfg):
 @click.command
 @pass_root_config
 def clean(root_cfg):
-    """Cleans up Gerrit working directory
+    """Cleans up Gerrit working directory.
 
-    Removes all linked plugins and changes to plugins/external_plugin_deps.bzl
+    Removes all linked plugins and changes to plugins/external_plugin_deps.bzl and tools/bzl/plugins.bzl.
     """
     for plugin in root_cfg.gerrit_worktree.linked_plugins():
         if root_cfg.verbose:
@@ -79,6 +79,10 @@ def clean(root_cfg):
     if root_cfg.verbose:
         click.echo("Restore plugins/external_plugin_deps.bzl")
     root_cfg.gerrit_worktree.clean_external_plugin_deps()
+
+    if root_cfg.verbose:
+        click.echo("Restore tools/bzl/plugins.bzl")
+    root_cfg.gerrit_worktree.clean_tools_plugins()
 
 
 plugins.add_command(list_plugins)
