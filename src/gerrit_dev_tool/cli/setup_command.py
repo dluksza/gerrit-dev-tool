@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 import click
 
+from gerrit_dev_tool.git_client import GitClient
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
+from gerrit_dev_tool.urls import Urls
 
 
 @click.command
@@ -19,4 +21,5 @@ def setup(name):
 
     Creates a directory structure for Gerrit Dev Tool to operate and clones the Gerrit project.
     """
-    GrdtWorkspace.create(name)
+    workspace = GrdtWorkspace.create(name)
+    GitClient.clone(Urls.gerrit, workspace.gerrit())

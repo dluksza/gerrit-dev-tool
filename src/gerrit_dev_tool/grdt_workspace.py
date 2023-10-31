@@ -57,3 +57,6 @@ class GrdtWorkspace:
 
     def testsite(self):
         return os.path.join(self._root, _testsite_dir)
+
+    def gerrit(self):
+        return os.path.join(self._root, _gerrit_dir)
