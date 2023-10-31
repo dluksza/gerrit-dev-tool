@@ -7,6 +7,7 @@ from gerrit_dev_tool.__about__ import __version__
 from gerrit_dev_tool.cli.checkout_command import checkout
 from gerrit_dev_tool.cli.plugins_command import plugins
 from gerrit_dev_tool.cli.root_config import RootConfig
+from gerrit_dev_tool.cli.setup_command import setup
 
 
 @click.option("--verbose", is_flag=True)
@@ -19,3 +20,4 @@ def gerrit_dev_tool(ctx, verbose):
 
 gerrit_dev_tool.add_command(checkout)
 gerrit_dev_tool.add_command(plugins)
+gerrit_dev_tool.add_command(setup)
