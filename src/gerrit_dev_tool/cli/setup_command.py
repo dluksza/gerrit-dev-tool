@@ -15,8 +15,8 @@ from gerrit_dev_tool.urls import Urls
 @click.option(
     "-n",
     "--name",
-    default=os.path.join(os.getcwd(), "gerrit-workspace"),
-    type=click.Path(exists=False, file_okay=False, resolve_path=True),
+    default="gerrit-workspace",
+    type=str,
     help="Name of directory where workspace should be initialised.",
 )
 @click.option("--no-build", is_flag=True, help="Don't build Gerrit during setup also implies '--no-init'")
@@ -26,7 +26,8 @@ def setup(name, no_build, no_init):
 
     Creates a directory structure for Gerrit Dev Tool to operate and clones the Gerrit project.
     """
-    workspace = GrdtWorkspace.create(name)
+    path = os.path.join(os.getcwd(), name)
+    workspace = GrdtWorkspace.create(path)
     GitClient.clone(Urls.gerrit, workspace.gerrit())
 
     if not no_build:

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2023-present Dariusz Luksza <dariusz.luksza@gmail.com>
 #
 # SPDX-License-Identifier: Apache-2.0
+import os
 import subprocess
 
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
@@ -26,7 +27,7 @@ class TestsiteClient(object):
                 cwd=self._worktree,
                 stderr=subprocess.DEVNULL,
             )
-            self._java_path = output_base.strip() + "/external/local_jdk/bin/java"
+            self._java_path = os.path.join(self._worktree, output_base.strip(), "external", "local_jdk", "bin", "java")
 
         subprocess.run(
             [self._java_path, "-jar", "bazel-bin/gerrit.war"] + list(args) + ["-d", self._testsite],
