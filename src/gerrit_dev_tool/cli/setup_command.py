@@ -2,10 +2,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import os
+
 import click
 
-from gerrit_dev_tool.git_client import GitClient
 from gerrit_dev_tool.bazel_client import BazelClient
+from gerrit_dev_tool.git_client import GitClient
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 from gerrit_dev_tool.testsite_client import TestsiteClient
 from gerrit_dev_tool.urls import Urls

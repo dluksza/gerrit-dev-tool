@@ -4,7 +4,7 @@
 import subprocess
 
 
-class BazelClient(object):
+class BazelClient:
     def __init__(self, workdir):
         self.workdir = workdir
 

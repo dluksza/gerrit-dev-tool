@@ -7,7 +7,7 @@ import subprocess
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
 
-class TestsiteClient(object):
+class TestsiteClient:
     def __init__(self, workspace: GrdtWorkspace) -> None:
         self._worktree = workspace.gerrit()
         self._testsite = workspace.testsite()
