@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import click
 
-from gerrit_dev_tool.cli.root_config import pass_root_config
+from gerrit_dev_tool.cli.root_config import RootConfig, pass_root_config
 
 
 @click.group(name="plugins")
@@ -26,9 +26,9 @@ def list_plugins(root_cfg):
 
 
 @click.command
-@click.argument("name")
+@click.argument("name", type=str)
 @pass_root_config
-def install(root_cfg, name):
+def install(root_cfg: RootConfig, name: str):
     """Install plugin by name.
 
     Link plugin into plugins directory and update external_plugin_deps.bzl if needed.

@@ -22,7 +22,7 @@ from gerrit_dev_tool.urls import Urls
 )
 @click.option("--no-build", is_flag=True, help="Don't build Gerrit during setup also implies '--no-init'")
 @click.option("--no-init", is_flag=True, help="Don't initialize Gerrit testsite.")
-def setup(name, no_build, no_init):
+def setup(name: str, no_build: bool, no_init: bool):
     """Setup Gerrit Dev Tool workspace.
 
     Creates a directory structure for Gerrit Dev Tool to operate and clones the Gerrit project.

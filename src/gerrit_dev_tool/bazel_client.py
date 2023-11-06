@@ -5,13 +5,13 @@ import subprocess
 
 
 class BazelClient:
-    def __init__(self, workdir):
+    def __init__(self, workdir: str):
         self.workdir = workdir
 
     def sync(self):
         self._run("sync")
 
-    def build(self, target):
+    def build(self, target: str):
         self._run("build", target)
 
     def _run(self, *args):
