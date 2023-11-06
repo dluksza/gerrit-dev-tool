@@ -20,13 +20,58 @@ def test_default_execution(mocker, tmp_path):
     with runner.isolated_filesystem(temp_dir=tmp_path) as cwd:
         result = runner.invoke(gerrit_dev_tool, ["setup"])
 
-        print(result.output)
         assert result.exit_code == 0
 
         assert_directory_structure(cwd)
         assert_gerrit_cloned(cwd)
         assert_build_gerrit(cwd)
         assert_site_initialized(cwd)
+
+
+def test_execution_with_name(mocker, tmp_path):
+    workspace_name = "test-workspace"
+    mocker.patch("subprocess.run")
+    mocker.patch("subprocess.check_output", return_value=_java_dir)
+    runner = CliRunner()
+
+    with runner.isolated_filesystem(temp_dir=tmp_path) as cwd:
+        result = runner.invoke(gerrit_dev_tool, ["setup", "--name", workspace_name])
+
+        assert result.exit_code == 0
+
+        assert_directory_structure(cwd, workspace_name)
+        assert_gerrit_cloned(cwd, workspace_name)
+        assert_build_gerrit(cwd, workspace_name)
+        assert_site_initialized(cwd, workspace_name)
+
+
+def test_default_without_build(mocker, tmp_path):
+    mocker.patch("subprocess.run")
+    mocker.patch("subprocess.check_output", return_value=_java_dir)
+    runner = CliRunner()
+
+    with runner.isolated_filesystem(temp_dir=tmp_path) as cwd:
+        result = runner.invoke(gerrit_dev_tool, ["setup", "--no-build"])
+
+        assert result.exit_code == 0
+
+        assert_directory_structure(cwd)
+        assert_gerrit_cloned(cwd)
+
+
+def test_default_without_init(mocker, tmp_path):
+    mocker.patch("subprocess.run")
+    mocker.patch("subprocess.check_output", return_value=_java_dir)
+    runner = CliRunner()
+
+    with runner.isolated_filesystem(temp_dir=tmp_path) as cwd:
+        result = runner.invoke(gerrit_dev_tool, ["setup", "--no-init"])
+
+        assert result.exit_code == 0
+
+        assert_directory_structure(cwd)
+        assert_gerrit_cloned(cwd)
+        assert_build_gerrit(cwd)
 
 
 def assert_directory_structure(cwd, name="gerrit-workspace"):
