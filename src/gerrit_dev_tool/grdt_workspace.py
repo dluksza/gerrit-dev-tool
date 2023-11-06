@@ -26,37 +26,25 @@ class GrdtWorkspace:
     def create(root: str):
         os.mkdir(root)
         open(os.path.join(root, _grdt_marker), "a").close()
-        os.mkdir(os.path.join(root, _plugins_dir))
-        os.mkdir(os.path.join(root, _modules_dir))
-        os.mkdir(os.path.join(root, _sites_dir))
-        os.mkdir(os.path.join(root, _sites_dir, _default_site_name))
-        os.mkdir(os.path.join(root, _gerrit_dir))
-        os.mkdir(os.path.join(root, _recepies_dir))
-        os.symlink(
-            os.path.join(_sites_dir, _default_site_name),
-            os.path.join(root, _testsite_dir),
-            target_is_directory=True,
-        )
 
-        return GrdtWorkspace(root)
+        workspace = GrdtWorkspace(root)
+        default_site = os.path.join(workspace.sites, _default_site_name)
+
+        os.mkdir(workspace.plugins)
+        os.mkdir(workspace.modules)
+        os.mkdir(workspace.sites)
+        os.mkdir(default_site)
+        os.mkdir(workspace.gerrit)
+        os.mkdir(workspace.recepies)
+        os.symlink(default_site, workspace.testsite, target_is_directory=True)
+
+        return workspace
 
     def __init__(self, root):
         self._root = root
-
-    def plugins(self):
-        return os.path.join(self._root, _plugins_dir)
-
-    def modules(self):
-        return os.path.join(self._root, _modules_dir)
-
-    def sites(self):
-        return os.path.join(self._root, _sites_dir)
-
-    def recepies(self):
-        return os.path.join(self._root, _recepies_dir)
-
-    def testsite(self):
-        return os.path.join(self._root, _testsite_dir)
-
-    def gerrit(self):
-        return os.path.join(self._root, _gerrit_dir)
+        self.plugins = os.path.join(root, _plugins_dir)
+        self.modules = os.path.join(root, _modules_dir)
+        self.sites = os.path.join(root, _sites_dir)
+        self.recepies = os.path.join(root, _recepies_dir)
+        self.testsite = os.path.join(root, _testsite_dir)
+        self.gerrit = os.path.join(root, _gerrit_dir)

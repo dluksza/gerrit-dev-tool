@@ -29,10 +29,10 @@ def setup(name: str, no_build: bool, no_init: bool):
     """
     path = os.path.join(os.getcwd(), name)
     workspace = GrdtWorkspace.create(path)
-    GitClient.clone(Urls.gerrit, workspace.gerrit())
+    GitClient.clone(Urls.gerrit, workspace.gerrit)
 
     if not no_build:
-        bazel = BazelClient(workspace.gerrit())
+        bazel = BazelClient(workspace.gerrit)
         bazel.sync()
         bazel.build("gerrit")
 

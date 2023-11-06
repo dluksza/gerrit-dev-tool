@@ -33,6 +33,12 @@ def install(root_cfg: RootConfig, name: str):
 
     Link plugin into plugins directory and update external_plugin_deps.bzl if needed.
     """
+    # check if plugin is already installed
+    # check if plugin is cloned
+    #   clone if it isnn't
+    # link it to `gerrit/plugins`
+    # generate `plugins/plugin_external_deps.bzl`
+    # generate `tools/bzl/plugins.bzl`
     click.echo("install %s plugin" % name)
 
 
