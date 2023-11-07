@@ -74,6 +74,20 @@ def test_default_without_init(mocker, tmp_path):
         assert_build_gerrit(cwd)
 
 
+def test_fail_when_worskspace_exist(tmp_path):
+    runner = CliRunner()
+
+    with runner.isolated_filesystem(temp_dir=tmp_path) as cwd:
+        root = os.path.join(cwd, "gerrit-workspace")
+        os.mkdir(root)
+        open(os.path.join(root, ".grdt-workspace"), "a").close()
+
+        result = runner.invoke(gerrit_dev_tool, ["setup"])
+
+        assert result.exit_code == 1
+        assert result.output.strip() == f"Error: Workspace already exists at: {root}"
+
+
 def assert_directory_structure(cwd, name="gerrit-workspace"):
     workspace = os.path.join(cwd, name)
 

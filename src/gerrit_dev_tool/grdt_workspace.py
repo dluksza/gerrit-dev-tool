@@ -40,8 +40,21 @@ class GrdtWorkspace:
 
         return workspace
 
+    @staticmethod
+    def discover(directory: str):
+        location = directory
+        prev_location = None
+        while location != prev_location:
+            if os.path.isfile(os.path.join(location, _grdt_marker)):
+                return GrdtWorkspace(location)
+            else:
+                prev_location = location
+                location = os.path.abspath(os.path.join(location, os.path.pardir))
+
+        return None
+
     def __init__(self, root):
-        self._root = root
+        self.root = root
         self.plugins = os.path.join(root, _plugins_dir)
         self.modules = os.path.join(root, _modules_dir)
         self.sites = os.path.join(root, _sites_dir)

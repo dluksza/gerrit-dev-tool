@@ -22,12 +22,18 @@ from gerrit_dev_tool.urls import Urls
 )
 @click.option("--no-build", is_flag=True, help="Don't build Gerrit during setup also implies '--no-init'")
 @click.option("--no-init", is_flag=True, help="Don't initialize Gerrit testsite.")
-def setup(name: str, no_build: bool, no_init: bool):
+@click.pass_context
+def setup(ctx: click.Context, name: str, no_build: bool, no_init: bool):
     """Setup Gerrit Dev Tool workspace.
 
     Creates a directory structure for Gerrit Dev Tool to operate and clones the Gerrit project.
     """
     path = os.path.join(os.getcwd(), name)
+
+    if GrdtWorkspace.discover(path) is not None:
+        click.echo(f"Error: Workspace already exists at: {path}")
+        ctx.exit(1)
+
     workspace = GrdtWorkspace.create(path)
     GitClient.clone(Urls.gerrit, workspace.gerrit)
 

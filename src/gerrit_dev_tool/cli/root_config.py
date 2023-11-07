@@ -4,11 +4,13 @@
 import click
 
 from gerrit_dev_tool.gerrit_worktree import GerritWorktree
+from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
 
 class RootConfig:
-    def __init__(self, verbose=False):
-        self.gerrit_worktree = GerritWorktree(".")
+    def __init__(self, workspace: GrdtWorkspace, verbose=False):
+        self.workspace = workspace
+        self.gerrit_worktree = GerritWorktree(workspace.gerrit)
         self.verbose = verbose
 
 
