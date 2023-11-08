@@ -23,8 +23,8 @@ def gerrit_dev_tool(ctx: click.Context, verbose: bool):
     if ctx.invoked_subcommand != setup.name and workspace is None:
         click.echo("Error: Workspace not found!")
         ctx.exit(2)
-
-    ctx.obj = RootConfig(workspace, verbose=verbose)
+    elif workspace is not None:
+        ctx.obj = RootConfig(workspace, verbose=verbose)
 
 
 gerrit_dev_tool.add_command(checkout)
