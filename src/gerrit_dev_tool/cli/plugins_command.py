@@ -27,16 +27,23 @@ def list_plugins(root_cfg):
 
 @click.command
 @click.argument("name", type=str)
-@pass_root_config
-def install(root_cfg: RootConfig, name: str):
+@click.pass_context
+def install(ctx: click.Context, name: str):
     """Install plugin by name.
 
     Link plugin into plugins directory and update external_plugin_deps.bzl if needed.
     """
-    # check if plugin is already installed
-    # check if plugin is cloned
-    #   clone if it isnn't
-    # link it to `gerrit/plugins`
+    root_cfg = ctx.ensure_object(RootConfig)
+    if root_cfg.gerrit_worktree.has_plugin(name):
+        click.echo("Plugin already installed")
+        ctx.exit(0)
+
+    plugin_path = root_cfg.plugin_repo.get_path(name)
+    if plugin_path is None:
+        click.echo(f"Plugin {name} was not found in default locations.")
+        ctx.exit(3)
+
+    root_cfg.gerrit_worktree.link_plugin(plugin_path)
     # generate `plugins/plugin_external_deps.bzl`
     # generate `tools/bzl/plugins.bzl`
     click.echo("install %s plugin" % name)

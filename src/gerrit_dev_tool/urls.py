@@ -7,3 +7,11 @@ class Urls:
     gerrit = "https://gerrit.googlesource.com/gerrit"
     plugins = "https://gerrit.googlesource.com/plugins/"
     modules = "https://gerrit.googlesource.com/modules/"
+
+    @staticmethod
+    def plugin_url(plugin_name: str) -> str:
+        return Urls.plugins + plugin_name
+
+    @staticmethod
+    def module_url(plugin_name: str) -> str:
+        return Urls.modules + plugin_name

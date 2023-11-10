@@ -11,6 +11,13 @@ class GerritWorktree:
         self._plugin_dir = os.path.join(worktree, "plugins")
         self._dot_git = os.path.join(worktree, ".git")
 
+    def has_plugin(self, plugin_name: str) -> bool:
+        return os.path.islink(os.path.join(self._plugin_dir, plugin_name))
+
+    def link_plugin(self, plugin_path: str):
+        (_, name) = os.path.split(plugin_path)
+        os.symlink(plugin_path, os.path.join(self._plugin_dir, name), target_is_directory=True)
+
     def linked_plugins(self):
         "List all plugins linked into plugins directory."
         for plugin in os.listdir(self._plugin_dir):

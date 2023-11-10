@@ -6,6 +6,7 @@ import click
 from gerrit_dev_tool.bazel_client import BazelClient
 from gerrit_dev_tool.gerrit_worktree import GerritWorktree
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
+from gerrit_dev_tool.plugin_repository import PluginRepository
 from gerrit_dev_tool.testsite_client import TestsiteClient
 
 
@@ -15,6 +16,7 @@ class RootConfig:
         self.gerrit_worktree = GerritWorktree(workspace.gerrit)
         self.bazel = BazelClient(workspace.gerrit)
         self.site = TestsiteClient(workspace)
+        self.plugin_repo = PluginRepository(workspace)
         self.verbose = verbose
 
 

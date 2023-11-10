@@ -61,3 +61,9 @@ class GrdtWorkspace:
         self.recepies = os.path.join(root, _recepies_dir)
         self.testsite = os.path.join(root, _testsite_dir)
         self.gerrit = os.path.join(root, _gerrit_dir)
+
+    def plugin_path(self, plugin_name: str) -> str:
+        return os.path.join(self.plugins, plugin_name)
+
+    def module_path(self, plugin_name: str) -> str:
+        return os.path.join(self.modules, plugin_name)
