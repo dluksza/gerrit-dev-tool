@@ -57,12 +57,14 @@ def install(ctx: click.Context, name: str):
 @click.command
 @click.argument("name")
 @pass_root_config
-def uninstall(root_cfg, name):
+def uninstall(root_cfg: RootConfig, name: str):
     """Uninstall plugin by name.
 
     Remove plugin from plugins directory and update external_plugin_deps.bzl if needed.
     """
-    click.echo("uinstall %s plugin" % name)
+    click.echo("Uninstall %s plugin" % name)
+    root_cfg.gerrit_worktree.unlink_plugin(name)
+    root_cfg.workspace_sync.external_deps()
 
 
 @click.command()
