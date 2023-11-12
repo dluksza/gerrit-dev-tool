@@ -8,6 +8,7 @@ from gerrit_dev_tool.gerrit_worktree import GerritWorktree
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 from gerrit_dev_tool.plugin_repository import PluginRepository
 from gerrit_dev_tool.testsite_client import TestsiteClient
+from gerrit_dev_tool.workspace_sync import WorkspaceSync
 
 
 class RootConfig:
@@ -17,6 +18,7 @@ class RootConfig:
         self.bazel = BazelClient(workspace.gerrit)
         self.site = TestsiteClient(workspace)
         self.plugin_repo = PluginRepository(workspace)
+        self.workspace_sync = WorkspaceSync(self.gerrit_worktree)
         self.verbose = verbose
 
 
