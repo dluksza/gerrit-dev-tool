@@ -12,7 +12,10 @@ class WorkspaceSync:
     def __init__(self, gerrit_worktree: GerritWorktree) -> None:
         self._gerrit_worktree = gerrit_worktree
 
-    def sync(self) -> None:
+    def internal_deps(self, plugin_name: str) -> None:
+        pass
+
+    def external_deps(self) -> None:
         dependencies = reduce(
             lambda d1, d2: d1.merge(d2),
             map(lambda p: p.get_extenal_deps(), self._linked_plugins()),

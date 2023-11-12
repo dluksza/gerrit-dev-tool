@@ -44,7 +44,12 @@ def install(ctx: click.Context, name: str):
         ctx.exit(3)
 
     root_cfg.gerrit_worktree.link_plugin(plugin_path)
-    root_cfg.workspace_sync.sync()
+
+    plugin = root_cfg.gerrit_worktree.get_plugin(name)
+    for internal_dependency in plugin.get_internal_deps():
+        ctx.invoke(install, name=internal_dependency)
+
+    root_cfg.workspace_sync.external_deps()
     # generate `tools/bzl/plugins.bzl`
     click.echo("install %s plugin" % name)
 
