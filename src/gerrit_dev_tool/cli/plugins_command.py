@@ -89,9 +89,7 @@ def clean(root_cfg):
     Removes all linked plugins and changes to plugins/external_plugin_deps.bzl and tools/bzl/plugins.bzl.
     """
     for plugin in root_cfg.gerrit_worktree.linked_plugins():
-        if root_cfg.verbose:
-            click.echo("Removing plugin: %s", plugin)
-        click.echo("linked plugin: %s" % plugin)
+        click.echo("Removing plugin: %s" % plugin)
         root_cfg.gerrit_worktree.unlink_plugin(plugin)
 
     if root_cfg.verbose:
