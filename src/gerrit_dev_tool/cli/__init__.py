@@ -7,6 +7,7 @@ import click
 
 from gerrit_dev_tool.__about__ import __version__
 from gerrit_dev_tool.cli.checkout_command import checkout
+from gerrit_dev_tool.cli.config_command import config
 from gerrit_dev_tool.cli.plugins_command import plugins
 from gerrit_dev_tool.cli.root_config import RootConfig
 from gerrit_dev_tool.cli.setup_command import setup
@@ -27,6 +28,7 @@ def gerrit_dev_tool(ctx: click.Context, verbose: bool):
         ctx.obj = RootConfig(workspace, verbose=verbose)
 
 
+gerrit_dev_tool.add_command(config)
 gerrit_dev_tool.add_command(checkout)
 gerrit_dev_tool.add_command(plugins)
 gerrit_dev_tool.add_command(setup)

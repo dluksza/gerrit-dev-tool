@@ -11,7 +11,11 @@ class TestsiteClient:
     def __init__(self, workspace: GrdtWorkspace) -> None:
         self._worktree = workspace.gerrit
         self._testsite = workspace.testsite
+        self._etc_dir = os.path.join(self._testsite, "etc")
         self._java_path = None
+
+    def get_config(self, config_name) -> str:
+        return os.path.join(self._etc_dir, config_name)
 
     def init_dev(self):
         self._run("init", "--batch", "--no-auto-start", "--dev")
