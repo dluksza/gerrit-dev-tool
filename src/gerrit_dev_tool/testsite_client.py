@@ -19,7 +19,7 @@ class TestsiteClient:
 
     def gerrit_sh(self, arg: str) -> None:
         subprocess.run(
-            ["./bin/gerrit.sh", arg],
+            ["./bin/gerrit.sh", arg],  # noqa: S603
             cwd=self._testsite,
             check=True,
         )
@@ -33,7 +33,7 @@ class TestsiteClient:
     def _run(self, *args):
         if not self._java_path:
             output_base = subprocess.check_output(
-                ["bazel", "info", "output_base"],
+                ["bazel", "info", "output_base"],  # noqa: S603 S607
                 text=True,
                 cwd=self._worktree,
                 stderr=subprocess.DEVNULL,
@@ -41,7 +41,7 @@ class TestsiteClient:
             self._java_path = os.path.join(self._worktree, output_base.strip(), "external", "local_jdk", "bin", "java")
 
         subprocess.run(
-            [self._java_path, "-jar", "bazel-bin/gerrit.war"] + list(args) + ["-d", self._testsite],
+            [self._java_path, "-jar", "bazel-bin/gerrit.war", *args, "-d", self._testsite],  # noqa: S603
             cwd=self._worktree,
             check=True,
         )

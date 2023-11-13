@@ -15,4 +15,8 @@ class BazelClient:
         self._run("build", target)
 
     def _run(self, *args):
-        subprocess.run(["bazel"] + list(args), cwd=self.workdir, check=True)
+        subprocess.run(
+            ["bazel", *args],  # noqa: S603 S607
+            cwd=self.workdir,
+            check=True,
+        )

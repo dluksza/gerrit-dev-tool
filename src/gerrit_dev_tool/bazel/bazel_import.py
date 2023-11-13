@@ -16,7 +16,7 @@ class BazelImport:
         return BazelImport(self.module, [*merged_functions])
 
     def __str__(self) -> str:
-        functions = ", ".join(map(lambda i: f'"{i}"', self.functions))
+        functions = ", ".join(f'"{function}"' for function in self.functions)
         return f"""load("{self.module}", {functions})"""
 
     def __eq__(self, __value: object) -> bool:

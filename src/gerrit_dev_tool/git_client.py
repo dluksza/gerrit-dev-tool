@@ -7,4 +7,7 @@ import subprocess
 class GitClient:
     @staticmethod
     def clone(url: str, dst: str):
-        subprocess.run(["git", "clone", "--recurse-submodules", url, dst], check=True)
+        subprocess.run(
+            ["git", "clone", "--recurse-submodules", url, dst],  # noqa: S603 S607
+            check=True,
+        )

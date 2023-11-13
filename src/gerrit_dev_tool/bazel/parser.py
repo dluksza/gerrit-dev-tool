@@ -49,34 +49,34 @@ class BazelParser:
         if content == "":
             return PluginExternalDeps([], [])
 
-        bazelApi = _BazelApi()
+        bazel_api = _BazelApi()
 
-        exec(
+        exec(  # noqa: S102
             _code_template.format(code=content),
-            {"load": bazelApi.load, "maven_jar": bazelApi.maven_jar},
+            {"load": bazel_api.load, "maven_jar": bazel_api.maven_jar},
         )
 
-        return PluginExternalDeps(bazelApi.imports, bazelApi.dependencies)
+        return PluginExternalDeps(bazel_api.imports, bazel_api.dependencies)
 
     @staticmethod
     def build(content: str) -> PluginBuild:
         if content == "":
             return PluginBuild([], [])
 
-        bazelApi = _BazelApi()
+        bazel_api = _BazelApi()
 
-        exec(
+        exec(  # noqa: S102
             content,
             {
-                "load": bazelApi.load,
-                "glob": bazelApi.glob,
-                "gerrit_plugin": bazelApi.gerrit_plugin,
-                "junit_tests": bazelApi.junit_tests,
-                "java_library": bazelApi.java_library,
-                "package": bazelApi.package,
+                "load": bazel_api.load,
+                "glob": bazel_api.glob,
+                "gerrit_plugin": bazel_api.gerrit_plugin,
+                "junit_tests": bazel_api.junit_tests,
+                "java_library": bazel_api.java_library,
+                "package": bazel_api.package,
                 "PLUGIN_DEPS": [],
                 "PLUGIN_TEST_DEPS": [],
             },
         )
 
-        return PluginBuild(bazelApi.imports, bazelApi.java_libraries)
+        return PluginBuild(bazel_api.imports, bazel_api.java_libraries)

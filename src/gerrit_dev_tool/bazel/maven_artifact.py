@@ -2,12 +2,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+_artifact_segments = 3
+
 
 class MavenArtifact:
     @staticmethod
     def parse(line: str):
         segments = line.split(":")
-        assert len(segments) == 3
+        assert len(segments) == _artifact_segments
 
         return MavenArtifact(segments[0], segments[1], segments[2])
 

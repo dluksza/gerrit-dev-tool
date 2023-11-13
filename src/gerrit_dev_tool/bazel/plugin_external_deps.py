@@ -20,7 +20,7 @@ class PluginExternalDeps:
     def to_bazel_file(self) -> str:
         imports = "\n".join(map(str, self.imports))
         dependencies = (
-            "\n\n    ".join(map(lambda d: str(d).replace("\n", "\n    ").strip(), self.dependencies))
+            "\n\n    ".join(str(d).replace("\n", "\n    ").strip() for d in self.dependencies)
             if len(self.dependencies) > 0
             else "pass"
         )
@@ -38,7 +38,7 @@ def external_plugin_deps():
         return self.imports == __value.imports and self.dependencies == __value.dependencies
 
     def _merge_imports(self, other: Self) -> list[BazelImport]:
-        imports = dict(map(lambda i: (i.module, i), self.imports))
+        imports = {i.module: i for i in self.imports}
 
         for other_import in other.imports:
             if other_import.module in imports:

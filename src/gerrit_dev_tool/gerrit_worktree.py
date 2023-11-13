@@ -39,10 +39,16 @@ class GerritWorktree:
         return os.path.join(self._plugin_dir, "external_plugin_deps.bzl")
 
     def clean_external_plugin_deps(self):
-        subprocess.run(["git", "--git-dir", self._dot_git, "restore", "plugins/external_plugin_deps.bzl"], check=True)
+        subprocess.run(
+            ["git", "--git-dir", self._dot_git, "restore", "plugins/external_plugin_deps.bzl"],  # noqa: S603 S607
+            check=True,
+        )
 
     def clean_tools_plugins(self):
-        subprocess.run(["git", "--git-dir", self._dot_git, "restore", "tools/bzl/plugins.bzl"], check=True)
+        subprocess.run(
+            ["git", "--git-dir", self._dot_git, "restore", "tools/bzl/plugins.bzl"],  # noqa: S603 S607
+            check=True,
+        )
 
     def _plugin_path(self, plugin_name: str) -> str:
         return os.path.join(self._plugin_dir, plugin_name)
