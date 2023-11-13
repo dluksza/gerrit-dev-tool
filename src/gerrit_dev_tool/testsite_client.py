@@ -17,6 +17,13 @@ class TestsiteClient:
     def get_config(self, config_name) -> str:
         return os.path.join(self._etc_dir, config_name)
 
+    def gerrit_sh(self, arg: str) -> None:
+        subprocess.run(
+            ["./bin/gerrit.sh", arg],
+            cwd=self._testsite,
+            check=True,
+        )
+
     def init_dev(self):
         self._run("init", "--batch", "--no-auto-start", "--dev")
 
