@@ -72,6 +72,8 @@ def uninstall(root_cfg: RootConfig, name: str):
     click.echo("Uninstall %s plugin" % name)
     root_cfg.gerrit_worktree.unlink_plugin(name)
     root_cfg.workspace_sync.external_deps()
+    root_cfg.workspace_sync.plugins_bzl()
+    root_cfg.workspace_sync.eclipse_project()
 
 
 @click.command()

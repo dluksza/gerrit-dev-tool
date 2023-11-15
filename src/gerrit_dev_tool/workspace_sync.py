@@ -25,6 +25,11 @@ class WorkspaceSync:
     def plugins_bzl(self) -> None:
         plugins = self._load_plugins_bzl()
 
+        for plugin_name in list(plugins.custom):
+            if not self._gerrit_worktree.has_plugin(plugin_name):
+                plugins.custom.remove(plugin_name)
+                plugins.custom_test.discard(plugin_name)
+
         for plugin_name in self._gerrit_worktree.linked_plugins():
             plugins.custom.add(plugin_name)
 
