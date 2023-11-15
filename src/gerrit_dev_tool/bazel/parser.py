@@ -20,8 +20,8 @@ class _BazelApi:
     def gerrit_plugin(self, *_args, **keywords) -> None:
         pass
 
-    def glob(self, *_args, **keywords) -> None:
-        pass
+    def glob(self, *_args, **keywords) -> list:
+        return []
 
     def java_library(self, name: str, exports: list[str] = [], neverlink=False, *_args, **_keywords) -> None:
         self.java_libraries.append(BazelJavaLibrary(name, bool(neverlink), exports))
