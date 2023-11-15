@@ -4,6 +4,7 @@
 import click
 
 from gerrit_dev_tool.cli.root_config import RootConfig, pass_root_config
+from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
 
 @click.group(name="plugins")
@@ -45,12 +46,19 @@ def install(ctx: click.Context, name: str):
 
     root_cfg.gerrit_worktree.link_plugin(plugin_path)
 
+    # sync plugin branch with Gerrit branch
+
     plugin = root_cfg.gerrit_worktree.get_plugin(name)
     for internal_dependency in plugin.get_internal_deps():
         ctx.invoke(install, name=internal_dependency)
 
     root_cfg.workspace_sync.external_deps()
+    # update `tools/bzl/plugins.bzl`
+    root_cfg.workspace_sync.plugins_bzl()
+    # run `tools/eclipse/project.py`
     root_cfg.bazel.build_plugin(name)
+    # update Gerrit configuration (if needed)
+    # deploy plugin JAR to Gerrit
     click.echo("install %s plugin" % name)
 
 

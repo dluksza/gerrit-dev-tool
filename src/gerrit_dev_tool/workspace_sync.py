@@ -6,6 +6,7 @@ from typing import Iterator
 
 from gerrit_dev_tool.gerrit_plugin import GerritPlugin
 from gerrit_dev_tool.gerrit_worktree import GerritWorktree
+from gerrit_dev_tool.plugins_bzl_parser import PluginsBzl, parse_plugins_bzl
 
 
 class WorkspaceSync:
@@ -20,5 +21,19 @@ class WorkspaceSync:
         with open(self._gerrit_worktree.plugins_depenedncy_file(), "w") as deps_file:
             deps_file.write(dependencies.to_bazel_file())
 
+    def plugins_bzl(self) -> None:
+        plugins = self._load_plugins_bzl()
+
+        for plugin_name in self._gerrit_worktree.linked_plugins():
+            plugins.custom.add(plugin_name)
+
+        if len(plugins.custom) > 0:
+            with open(self._gerrit_worktree.plugins_bzl(), "w") as output:
+                output.write(str(plugins))
+
     def _linked_plugins(self) -> Iterator[GerritPlugin]:
         return map(self._gerrit_worktree.get_plugin, self._gerrit_worktree.linked_plugins())
+
+    def _load_plugins_bzl(self) -> PluginsBzl:
+        with open(self._gerrit_worktree.plugins_bzl()) as current:
+            return parse_plugins_bzl(current.read())
