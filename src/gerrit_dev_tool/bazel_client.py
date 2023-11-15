@@ -5,16 +5,19 @@ import subprocess
 
 
 class BazelClient:
-    def __init__(self, workdir: str):
+    def __init__(self, workdir: str) -> None:
         self.workdir = workdir
 
-    def sync(self):
+    def sync(self) -> None:
         self._run("sync")
 
-    def build(self, target: str):
+    def build(self, target: str) -> None:
         self._run("build", target)
 
-    def _run(self, *args):
+    def build_plugin(self, plugin_name: str) -> None:
+        self._run("build", f"//plugins/{plugin_name}")
+
+    def _run(self, *args) -> None:
         subprocess.run(
             ["bazel", *args],  # noqa: S603 S607
             cwd=self.workdir,

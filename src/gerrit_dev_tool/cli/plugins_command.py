@@ -50,7 +50,7 @@ def install(ctx: click.Context, name: str):
         ctx.invoke(install, name=internal_dependency)
 
     root_cfg.workspace_sync.external_deps()
-    # generate `tools/bzl/plugins.bzl`
+    root_cfg.bazel.build_plugin(name)
     click.echo("install %s plugin" % name)
 
 
