@@ -10,7 +10,7 @@ from gerrit_dev_tool.gerrit_plugin import GerritPlugin
 
 class GerritWorktree:
     def __init__(self, worktree):
-        self._worktree = worktree
+        self.worktree = worktree
         self._plugin_dir = os.path.join(worktree, "plugins")
         self._dot_git = os.path.join(worktree, ".git")
 
@@ -40,7 +40,7 @@ class GerritWorktree:
         return os.path.join(self._plugin_dir, "external_plugin_deps.bzl")
 
     def plugins_bzl(self):
-        return os.path.join(self._worktree, "tools", "bzl", "plugins.bzl")
+        return os.path.join(self.worktree, "tools", "bzl", "plugins.bzl")
 
     def clean_external_plugin_deps(self) -> None:
         subprocess.run(

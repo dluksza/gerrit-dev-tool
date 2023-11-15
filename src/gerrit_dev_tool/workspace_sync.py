@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2023-present Dariusz Luksza <dariusz.luksza@gmail.com>
 #
 # SPDX-License-Identifier: Apache-2.0
+import subprocess
 from functools import reduce
 from typing import Iterator
 
@@ -30,6 +31,9 @@ class WorkspaceSync:
         if len(plugins.custom) > 0:
             with open(self._gerrit_worktree.plugins_bzl(), "w") as output:
                 output.write(str(plugins))
+
+    def eclipse_project(self) -> None:
+        subprocess.run('./tools/eclipse/project.py', cwd=self._gerrit_worktree.worktree, check=True)
 
     def _linked_plugins(self) -> Iterator[GerritPlugin]:
         return map(self._gerrit_worktree.get_plugin, self._gerrit_worktree.linked_plugins())

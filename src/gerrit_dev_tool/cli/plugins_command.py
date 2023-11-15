@@ -53,9 +53,8 @@ def install(ctx: click.Context, name: str):
         ctx.invoke(install, name=internal_dependency)
 
     root_cfg.workspace_sync.external_deps()
-    # update `tools/bzl/plugins.bzl`
     root_cfg.workspace_sync.plugins_bzl()
-    # run `tools/eclipse/project.py`
+    root_cfg.workspace_sync.eclipse_project()
     root_cfg.bazel.build_plugin(name)
     # update Gerrit configuration (if needed)
     # deploy plugin JAR to Gerrit
