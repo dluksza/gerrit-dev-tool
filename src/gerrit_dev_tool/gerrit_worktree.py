@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import subprocess
+from typing import Iterable
 
 from gerrit_dev_tool.gerrit_plugin import GerritPlugin
 
@@ -16,35 +17,38 @@ class GerritWorktree:
     def has_plugin(self, plugin_name: str) -> bool:
         return os.path.islink(self._plugin_path(plugin_name))
 
-    def link_plugin(self, plugin_path: str):
+    def link_plugin(self, plugin_path: str) -> None:
         (_, name) = os.path.split(plugin_path)
         os.symlink(plugin_path, self._plugin_path(name), target_is_directory=True)
 
     def get_plugin(self, plugin_name: str) -> GerritPlugin:
         return GerritPlugin(plugin_name, self._plugin_path(plugin_name))
 
-    def linked_plugins(self):
+    def linked_plugins(self) -> Iterable[str]:
         "List all plugins linked into plugins directory."
         for plugin in os.listdir(self._plugin_dir):
             path = os.path.join(self._plugin_dir, plugin)
             if os.path.islink(path) and os.path.isdir(path):
                 yield plugin
 
-    def unlink_plugin(self, plugin_name):
+    def unlink_plugin(self, plugin_name) -> None:
         "Removes plugin `plugin_name` from plugins directory."
         plugin_path = os.path.join(self._plugin_dir, plugin_name)
         os.unlink(plugin_path)
 
-    def plugins_depenedncy_file(self):
+    def plugins_depenedncy_file(self) -> str:
         return os.path.join(self._plugin_dir, "external_plugin_deps.bzl")
 
-    def clean_external_plugin_deps(self):
+    def plugins_bzl(self):
+        return os.path.join(self._worktree, "tools", "bzl", "plugins.bzl")
+
+    def clean_external_plugin_deps(self) -> None:
         subprocess.run(
             ["git", "--git-dir", self._dot_git, "restore", "plugins/external_plugin_deps.bzl"],  # noqa: S603 S607
             check=True,
         )
 
-    def clean_tools_plugins(self):
+    def clean_tools_plugins(self) -> None:
         subprocess.run(
             ["git", "--git-dir", self._dot_git, "restore", "tools/bzl/plugins.bzl"],  # noqa: S603 S607
             check=True,
