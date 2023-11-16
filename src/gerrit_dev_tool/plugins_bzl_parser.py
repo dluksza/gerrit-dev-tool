@@ -16,23 +16,17 @@ CORE_PLUGINS = [
 ]
 
 CUSTOM_PLUGINS = [
-    {self._join_plugins(self.custom)}
+    {self._join_plugins(self.custom, "# Add custom core plugins here")}
 ]
 
 CUSTOM_PLUGINS_TEST_DEPS = [
-    {self._join_custom_test()}
+    {self._join_plugins(self.custom_test, "# Add custom core plugins with tests deps here")}
 ]
 """.lstrip()
 
-    def _join_custom_test(self):
-        if len(self.custom_test) == 0:
-            return "# Add custom core plugins with tests deps here"
-
-        return self._join_plugins(self.custom_test)
-
-    def _join_plugins(self, plugins: set[str]) -> str:
+    def _join_plugins(self, plugins: set[str], empty_message="") -> str:
         if len(plugins) == 0:
-            return ""
+            return empty_message
 
         return ",\n    ".join(f'"{plugin}"' for plugin in sorted(plugins)) + ","
 
