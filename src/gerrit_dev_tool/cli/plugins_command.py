@@ -4,7 +4,6 @@
 import click
 
 from gerrit_dev_tool.cli.root_config import RootConfig, pass_root_config
-from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
 
 @click.group(name="plugins")

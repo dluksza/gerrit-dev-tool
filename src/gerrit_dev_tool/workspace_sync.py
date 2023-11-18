@@ -38,7 +38,7 @@ class WorkspaceSync:
                 output.write(str(plugins))
 
     def eclipse_project(self) -> None:
-        subprocess.run('./tools/eclipse/project.py', cwd=self._gerrit_worktree.worktree, check=True)
+        subprocess.run("./tools/eclipse/project.py", cwd=self._gerrit_worktree.worktree, check=True)
 
     def _linked_plugins(self) -> Iterator[GerritPlugin]:
         return map(self._gerrit_worktree.get_plugin, self._gerrit_worktree.linked_plugins())
