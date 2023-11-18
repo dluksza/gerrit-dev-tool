@@ -36,6 +36,7 @@ def setup(ctx: click.Context, name: str, no_build: bool, no_init: bool):
 
     workspace = GrdtWorkspace.create(path)
     GitClient.clone(Urls.gerrit, workspace.gerrit)
+    GitClient.install_commit_msg_hook(workspace.gerrit)
 
     if not no_build:
         bazel = BazelClient(workspace.gerrit)

@@ -24,11 +24,11 @@ class PluginRepository:
             return module_path
 
         if self._has_repository(Urls.plugin_url(plugin_name)):
-            GitClient.clone(Urls.plugin_url(plugin_name), plugin_path)
+            self._clone(plugin_name, plugin_path)
             return plugin_path
 
         if self._has_repository(Urls.module_url(plugin_name)):
-            GitClient.clone(Urls.module_url(plugin_name), module_path)
+            self._clone(plugin_name, module_path)
             return module_path
 
         return None
@@ -37,3 +37,7 @@ class PluginRepository:
         resp = requests.head(url)
 
         return resp.ok
+
+    def _clone(self, plugin_name: str, dst: str) -> None:
+        GitClient.clone(Urls.module_url(plugin_name), dst)
+        GitClient.install_commit_msg_hook(dst)
