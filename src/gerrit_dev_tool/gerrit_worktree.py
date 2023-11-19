@@ -6,6 +6,7 @@ import subprocess
 from typing import Iterable
 
 from gerrit_dev_tool.gerrit_plugin import GerritPlugin
+from gerrit_dev_tool.git_client import GitClient
 
 
 class GerritWorktree:
@@ -53,6 +54,9 @@ class GerritWorktree:
             ["git", "--git-dir", self._dot_git, "restore", "tools/bzl/plugins.bzl"],  # noqa: S603 S607
             check=True,
         )
+
+    def version(self) -> str:
+        return GitClient.version(self.worktree)
 
     def _plugin_path(self, plugin_name: str) -> str:
         return os.path.join(self._plugin_dir, plugin_name)

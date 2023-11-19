@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import os
+import re
 import stat
 import subprocess
 
@@ -17,6 +18,14 @@ class GitClient:
         )
 
     @staticmethod
+    def checkout(workdir: str, branch: str) -> None:
+        subprocess.run(
+            ["git", "checkout", "--recurse-submodules", branch],
+            cwd=workdir,
+            check=True,
+        )
+
+    @staticmethod
     def install_commit_msg_hook(dst: str) -> None:
         hooks_path = os.path.join(dst, ".git", "hooks")
         msg_hook_path = os.path.join(hooks_path, "commit-msg")
@@ -28,3 +37,43 @@ class GitClient:
         with open(msg_hook_path, "wb") as msg_hook:
             msg_hook.write(resp.content)
         os.chmod(msg_hook_path, os.stat(msg_hook_path).st_mode | stat.S_IEXEC)
+
+    @staticmethod
+    def list_remote_branches(workdir: str, pattern: str) -> list[str]:
+        return [
+            branch.strip()
+            for branch in GitClient._exec(
+                workdir,
+                "git",
+                "branch",
+                "--remote",
+                "--list",
+                pattern,
+            ).split("\n")
+        ]
+
+    @staticmethod
+    def version(workdir: str) -> str:
+        branches = GitClient.list_remote_branches(workdir, "origin/stable-*")
+        stable_branches = sorted(
+            filter(
+                lambda branch: re.match(r"^origin/stable-\d+\.\d+$", branch),
+                branches,
+            )
+        )
+        stable_branches.reverse()
+
+        for version in ["origin/master", *stable_branches]:
+            result = GitClient._exec(workdir, "git", "branch", "--contains", version)
+            if len(result) > 0:
+                return version
+
+        return ""
+
+    @staticmethod
+    def _exec(workdir: str, *cmd) -> str:
+        return subprocess.check_output(
+            cmd,
+            cwd=workdir,
+            text=True,
+        )

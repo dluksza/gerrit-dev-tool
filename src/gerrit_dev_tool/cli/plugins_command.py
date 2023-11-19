@@ -44,10 +44,12 @@ def install(ctx: click.Context, name: str):
         ctx.exit(3)
 
     root_cfg.gerrit_worktree.link_plugin(plugin_path)
+    plugin = root_cfg.gerrit_worktree.get_plugin(name)
 
     # sync plugin branch with Gerrit branch
+    gerrit_version = root_cfg.gerrit_worktree.version()
+    plugin.set_version(gerrit_version)
 
-    plugin = root_cfg.gerrit_worktree.get_plugin(name)
     for internal_dependency in plugin.get_internal_deps():
         ctx.invoke(install, name=internal_dependency)
 
