@@ -65,5 +65,8 @@ class GerritPlugin:
 
         GitClient.checkout(self._path, "origin/master")
 
+    def is_moduler(self) -> bool:
+        return "modules" in os.readlink(self._path)
+
     def _external_deps_path(self) -> str:
         return os.path.join(self._path, _extenrnal_deps)

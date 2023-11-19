@@ -56,9 +56,15 @@ def install(ctx: click.Context, name: str):
     root_cfg.workspace_sync.external_deps()
     root_cfg.workspace_sync.plugins_bzl()
     root_cfg.workspace_sync.eclipse_project()
-    root_cfg.bazel.build_plugin(name)
+    jar_path = root_cfg.bazel.build_plugin(name)
+
     # update Gerrit configuration (if needed)
     # deploy plugin JAR to Gerrit
+    if plugin.is_moduler():
+        root_cfg.site.deploy_module(jar_path)
+    else:
+        root_cfg.site.deploy_plugin(jar_path)
+
     click.echo("install %s plugin" % name)
 
 

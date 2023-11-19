@@ -30,6 +30,18 @@ class TestsiteClient:
     def reindex(self):
         self._run("reindex")
 
+    def deploy_plugin(self, plugin_path: str) -> None:
+        subprocess.run(
+            ["cp", "-f", plugin_path, os.path.join(self._testsite, "plugins")],  #  noqa: S603 S607
+            check=True,
+        )
+
+    def deploy_module(self, module_path: str) -> None:
+        subprocess.run(
+            ["cp", "-f", module_path, os.path.join(self._testsite, "lib")],  #  noqa: S603 S607
+            check=True,
+        )
+
     def _run(self, *args):
         if not self._java_path:
             output_base = subprocess.check_output(
