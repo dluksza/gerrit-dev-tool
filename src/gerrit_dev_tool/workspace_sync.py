@@ -17,7 +17,7 @@ class WorkspaceSync:
     def external_deps(self) -> None:
         dependencies = reduce(
             lambda d1, d2: d1.merge(d2),
-            map(lambda p: p.get_extenal_deps(), self._linked_plugins()),
+            [p.get_extenal_deps() for p in self._linked_plugins()],
         )
         with open(self._gerrit_worktree.plugins_depenedncy_file(), "w") as deps_file:
             deps_file.write(dependencies.to_bazel_file())
@@ -38,7 +38,11 @@ class WorkspaceSync:
                 output.write(str(plugins))
 
     def eclipse_project(self) -> None:
-        subprocess.run("./tools/eclipse/project.py", cwd=self._gerrit_worktree.worktree, check=True)
+        subprocess.run(
+            "./tools/eclipse/project.py",  # noqa: S603
+            cwd=self._gerrit_worktree.worktree,
+            check=True,
+        )
 
     def _linked_plugins(self) -> Iterator[GerritPlugin]:
         return map(self._gerrit_worktree.get_plugin, self._gerrit_worktree.linked_plugins())

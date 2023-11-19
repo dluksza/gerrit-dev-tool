@@ -1,4 +1,5 @@
-# SPDX-FileCopyrightText: 2023-present Dariusz Luksza <dariusz.luksza@gmail.com>
+# SPDX-FileCopyrightText::28
+# 2023-present Dariusz Luksza <dariusz.luksza@gmail.com>
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -25,7 +26,8 @@ def test_generation_matches_master(mocker):
             return f"* (HEAD detached at {_master}\n"
         if _is_remote_cmd(cmd):
             return ""
-        raise Exception("mock error")
+        msg = "mock error"
+        raise Exception(msg)
 
     mocker.patch("subprocess.check_output", side_effect=mock_handler)
 
@@ -43,7 +45,8 @@ def test_version_matches_stable_3_8(mocker):
                 return f"* (HEAD detached at {_stable_3_8})\n"
         if _is_remote_cmd(cmd):
             return "\n ".join([_stable_2_8, _stable_3_8, _stable_3_9])
-        raise Exception("mock error")
+        msg = "mock error"
+        raise Exception(msg)
 
     mocker.patch("subprocess.check_output", side_effect=mock_handler)
 

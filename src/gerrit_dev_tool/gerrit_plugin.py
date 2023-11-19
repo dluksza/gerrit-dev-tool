@@ -40,7 +40,7 @@ class GerritPlugin:
         neverlink = filter(lambda library: library.neverlink, self.get_build().java_libraries)
         for library in neverlink:
             exports_exports = filter(lambda e: e.startswith("//plugins/"), library.exports)
-            plugin_names = map(lambda e: e.replace("//plugins/", ""), exports_exports)
+            plugin_names = [e.replace("//plugins/", "") for e in exports_exports]
             result.append(*plugin_names)
         return result
 

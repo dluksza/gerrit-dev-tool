@@ -17,22 +17,22 @@ class _BazelApi:
     def load(self, module: str, *functions) -> None:
         self.imports.append(BazelImport(module, list(functions)))
 
-    def gerrit_plugin(self, *_args, **keywords) -> None:
+    def gerrit_plugin(self, *_, **_keywords) -> None:
         pass
 
-    def glob(self, *_args, **keywords) -> list:
+    def glob(self, *_, **_keywowrds) -> list:
         return []
 
     def java_library(self, name: str, exports: list[str] = [], neverlink=False, *_args, **_keywords) -> None:
         self.java_libraries.append(BazelJavaLibrary(name, bool(neverlink), exports))
 
-    def junit_tests(self, *_args, **_keywords) -> None:
+    def junit_tests(self, *_, **keywords) -> None:
         self.has_unit_tests = True
 
-    def maven_jar(self, name, artifact, sha1, *_args, **_keywords) -> None:
+    def maven_jar(self, name, artifact, sha1, *_, **_keywords) -> None:
         self.dependencies.append(BazelMavenJar(name, artifact, sha1))
 
-    def package(self, *_args, **_keywords) -> None:
+    def package(self, *_, **_keywords) -> None:
         pass
 
 

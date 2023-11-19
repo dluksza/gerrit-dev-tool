@@ -58,7 +58,7 @@ set_custom_test(CUSTOM_PLUGINS_TEST_DEPS)
 
 def parse_plugins_bzl(content: str) -> PluginsBzl:
     api = _PluginsBzlApi()
-    exec(
+    exec(  # noqa: S102
         __template.format(code=content),
         {
             "set_core": api.set_core,

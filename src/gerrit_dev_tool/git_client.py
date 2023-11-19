@@ -20,7 +20,7 @@ class GitClient:
     @staticmethod
     def checkout(workdir: str, branch: str) -> None:
         subprocess.run(
-            ["git", "checkout", "--recurse-submodules", branch],
+            ["git", "checkout", "--recurse-submodules", branch],  # noqa: S603 S607
             cwd=workdir,
             check=True,
         )
@@ -73,7 +73,7 @@ class GitClient:
     @staticmethod
     def _exec(workdir: str, *cmd) -> str:
         return subprocess.check_output(
-            cmd,
+            cmd,  # noqa: S603
             cwd=workdir,
             text=True,
         )
