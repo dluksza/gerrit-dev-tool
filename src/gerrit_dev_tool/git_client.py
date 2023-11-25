@@ -33,7 +33,7 @@ class GitClient:
             "https://gerrit-review.googlesource.com/tools/hooks/commit-msg",
             allow_redirects=True,
         )
-        os.makedirs(hooks_path)
+        os.makedirs(hooks_path, exist_ok=True)
         with open(msg_hook_path, "wb") as msg_hook:
             msg_hook.write(resp.content)
         os.chmod(msg_hook_path, os.stat(msg_hook_path).st_mode | stat.S_IEXEC)
