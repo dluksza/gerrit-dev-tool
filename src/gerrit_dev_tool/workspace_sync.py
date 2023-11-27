@@ -15,10 +15,11 @@ class WorkspaceSync:
         self._gerrit_worktree = gerrit_worktree
 
     def external_deps(self) -> None:
-        dependencies = reduce(
-            lambda d1, d2: d1.merge(d2),
-            [p.get_extenal_deps() for p in self._linked_plugins()],
-        )
+        linked_plugins = list(self._linked_plugins())
+        if not linked_plugins:
+            return
+
+        dependencies = reduce(lambda d1, d2: d1.merge(d2), [p.get_extenal_deps() for p in linked_plugins])
         with open(self._gerrit_worktree.plugins_depenedncy_file(), "w") as deps_file:
             deps_file.write(dependencies.to_bazel_file())
 
@@ -33,9 +34,8 @@ class WorkspaceSync:
         for plugin_name in self._gerrit_worktree.linked_plugins():
             plugins.custom.add(plugin_name)
 
-        if len(plugins.custom) > 0:
-            with open(self._gerrit_worktree.plugins_bzl(), "w") as output:
-                output.write(str(plugins))
+        with open(self._gerrit_worktree.plugins_bzl(), "w") as output:
+            output.write(str(plugins))
 
     def eclipse_project(self) -> None:
         subprocess.run(
