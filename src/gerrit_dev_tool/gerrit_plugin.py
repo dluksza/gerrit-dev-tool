@@ -3,15 +3,17 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import re
+from typing import Iterable
 
 from gerrit_dev_tool.bazel.parser import BazelParser
 from gerrit_dev_tool.bazel.plugin_build import PluginBuild
 from gerrit_dev_tool.bazel.plugin_external_deps import PluginExternalDeps
 from gerrit_dev_tool.git_client import GitClient
+from gerrit_dev_tool.utils.version_utils import negotiate_version
 
 _build = "BUILD"
 _extenrnal_deps = "external_plugin_deps.bzl"
-_version_match = re.compile(r"^origin/stable-(\d+\.\d+)$")
+_git_version_matcher = re.compile(r"^origin/stable-(\d+\.\d+)$")
 
 
 class GerritPlugin:
@@ -45,28 +47,21 @@ class GerritPlugin:
         return result
 
     def set_version(self, version: str) -> None:
-        matching_branches = GitClient.list_remote_branches(self._path, version)
-        if version in matching_branches:
-            GitClient.checkout(self._path, version)
-            return
-
-        [expected_major, expected_minor] = version.split(".")
-        versions = sorted(GitClient.list_remote_branches(self._path, "origin/stable-*"))
-
-        for version in versions:
-            # extract version from branch name
-            match = _version_match.search(version)
-            if match:
-                [major, minor] = match[1].split(".")
-                # check for greater version
-                if expected_major == major and expected_minor < minor or expected_major < major:
-                    GitClient.checkout(self._path, version)
-                    return
-
-        GitClient.checkout(self._path, "origin/master")
+        plugin_version = negotiate_version(version, self._available_git_versions())
+        if plugin_version == "master":
+            GitClient.checkout(self._path, "origin/master")
+        else:
+            GitClient.checkout(self._path, f"origin/stable-{plugin_version}")
 
     def is_moduler(self) -> bool:
         return "modules" in os.readlink(self._path)
 
     def _external_deps_path(self) -> str:
         return os.path.join(self._path, _extenrnal_deps)
+
+    def _available_git_versions(self) -> Iterable[str]:
+        versions = sorted(GitClient.list_remote_branches(self._path, "origin/stable-*"))
+        for version in versions:
+            match = _git_version_matcher.search(version)
+            if match:
+                yield match[1]
