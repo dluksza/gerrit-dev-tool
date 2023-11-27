@@ -43,8 +43,14 @@ class ConfigParser(configparser.ConfigParser):
         for section in self.sections():
             self._write_section(fp, section, self[section].items(), d)
 
-    def remove_value(self, section_name, option_name, value):
+    def remove_value(self, section_name, option_name, value) -> None:
+        if not section_name in self:
+            return
         section = self[section_name]
+
+        if not option_name in section:
+            return
+
         current = section[option_name]
         if value == current:
             section.pop(option_name)
