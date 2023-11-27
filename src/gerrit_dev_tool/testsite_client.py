@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import subprocess
+from gerrit_dev_tool.config_parser import ConfigParser
 
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
@@ -16,6 +17,31 @@ class TestsiteClient:
 
     def get_config(self, config_name) -> str:
         return os.path.join(self._etc_dir, config_name)
+
+    def add_to_config(self, src: ConfigParser | None) -> None:
+        if not src:
+            return
+
+        site_config = ConfigParser()
+        site_config.read(self.get_config("gerrit.config"))
+        site_config.read_dict(src)
+
+        with open(os.path.join(self._etc_dir, "gerrit.config"), "w") as output:
+            site_config.write(output)
+
+    def remove_from_config(self, src: ConfigParser | None) -> None:
+        if not src:
+            return
+
+        site_config = ConfigParser()
+        site_config.read(self.get_config("gerrit.config"))
+
+        for section in src:
+            for option in src[section]:
+                site_config.remove_value(section, option, src[section][option])
+
+        with open(os.path.join(self._etc_dir, "gerrit.config"), "w") as output:
+            site_config.write(output)
 
     def gerrit_sh(self, arg: str) -> None:
         subprocess.run(

@@ -3,23 +3,39 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import re
+from importlib.resources import files, contents, is_resource
 from typing import Iterable
 
 from gerrit_dev_tool.bazel.parser import BazelParser
 from gerrit_dev_tool.bazel.plugin_build import PluginBuild
 from gerrit_dev_tool.bazel.plugin_external_deps import PluginExternalDeps
+from gerrit_dev_tool.config_parser import ConfigParser
 from gerrit_dev_tool.git_client import GitClient
 from gerrit_dev_tool.utils.version_utils import negotiate_version
 
 _build = "BUILD"
 _extenrnal_deps = "external_plugin_deps.bzl"
 _git_version_matcher = re.compile(r"^origin/stable-(\d+\.\d+)$")
+_package_version_matcher = re.compile(r"^(\d+_\d+)$")
 
 
 class GerritPlugin:
     def __init__(self, name: str, path: str) -> None:
         self._name = name
         self._path = path
+        self._resource_package = f"gerrit_dev_tool.plugins.{name}"
+
+    def config(self, version: str) -> ConfigParser | None:
+        config_version = negotiate_version(version, self._available_config_versions())
+
+        config_resource = f"{self._resource_package}.{config_version}.etc"
+        config = files(config_resource).joinpath("gerrit.config")
+        if config.is_file():
+            config_content = config.read_text()
+            parser = ConfigParser()
+            parser.read_string(config_content)
+
+            return parser
 
     def get_build(self) -> PluginBuild:
         with open(os.path.join(self._path, _build)) as build:
@@ -65,3 +81,9 @@ class GerritPlugin:
             match = _git_version_matcher.search(version)
             if match:
                 yield match[1]
+
+    def _available_config_versions(self) -> Iterable[str]:
+        root = self._resource_package
+        for entry in contents(root):
+            if not is_resource(root, entry) and _package_version_matcher.match(entry):
+                yield entry

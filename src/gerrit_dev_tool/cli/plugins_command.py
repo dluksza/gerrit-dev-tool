@@ -59,6 +59,7 @@ def install(ctx: click.Context, name: str):
     jar_path = root_cfg.bazel.build_plugin(name)
 
     # update Gerrit configuration (if needed)
+    root_cfg.site.add_to_config(plugin.config(gerrit_version))
     # deploy plugin JAR to Gerrit
     if plugin.is_moduler():
         root_cfg.site.deploy_module(jar_path)
@@ -76,11 +77,14 @@ def uninstall(root_cfg: RootConfig, name: str):
 
     Remove plugin from plugins directory and update external_plugin_deps.bzl if needed.
     """
-    click.echo("Uninstall %s plugin" % name)
+    plugin = root_cfg.gerrit_worktree.get_plugin(name)
+    gerrit_version = root_cfg.gerrit_worktree.version()
+    root_cfg.site.remove_from_config(plugin.config(gerrit_version))
     root_cfg.gerrit_worktree.unlink_plugin(name)
     root_cfg.workspace_sync.external_deps()
     root_cfg.workspace_sync.plugins_bzl()
     root_cfg.workspace_sync.eclipse_project()
+    click.echo("Uninstall %s plugin" % name)
 
 
 @click.command()
