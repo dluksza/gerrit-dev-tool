@@ -38,33 +38,10 @@ def install(ctx: click.Context, name: str):
         click.echo("Plugin already installed")
         ctx.exit(0)
 
-    plugin_path = root_cfg.plugin_repo.get_path(name)
-    if plugin_path is None:
-        click.echo(f"Plugin {name} was not found in default locations.")
-        ctx.exit(3)
-
-    root_cfg.gerrit_worktree.link_plugin(plugin_path)
-    plugin = root_cfg.gerrit_worktree.get_plugin(name)
-
-    # sync plugin branch with Gerrit branch
-    gerrit_version = root_cfg.gerrit_worktree.version()
-    plugin.set_version(gerrit_version)
-
-    for internal_dependency in plugin.get_internal_deps():
-        ctx.invoke(install, name=internal_dependency)
-
-    root_cfg.workspace_sync.external_deps()
-    root_cfg.workspace_sync.plugins_bzl()
-    root_cfg.workspace_sync.eclipse_project()
-    jar_path = root_cfg.bazel.build_plugin(name)
-
-    # update Gerrit configuration (if needed)
-    root_cfg.site.add_to_config(plugin.config(gerrit_version))
-    # deploy plugin JAR to Gerrit
-    if plugin.is_moduler():
-        root_cfg.site.deploy_module(jar_path)
+    if root_cfg.gerrit_worktree.is_builtin_plugin(name):
+        install_builtin_plugin(root_cfg, name)
     else:
-        root_cfg.site.deploy_plugin(jar_path)
+        install_community_plugin(ctx, root_cfg, name)
 
     click.echo("install %s plugin" % name)
 
@@ -129,3 +106,45 @@ plugins.add_command(uninstall)
 plugins.add_command(test)
 plugins.add_command(deploy)
 plugins.add_command(clean)
+
+
+def install_builtin_plugin(root_cfg: RootConfig, name: str) -> None:
+    plugin = root_cfg.gerrit_worktree.get_plugin(name)
+    gerrit_version = root_cfg.gerrit_worktree.version()
+
+    jar_path = root_cfg.bazel.build_plugin(name)
+
+    # update Gerrit configuration (if needed)
+    root_cfg.site.add_to_config(plugin.config(gerrit_version))
+    root_cfg.site.deploy_plugin(jar_path)
+
+
+def install_community_plugin(ctx: click.Context, root_cfg: RootConfig, name: str) -> None:
+    plugin_path = root_cfg.plugin_repo.get_path(name)
+    if plugin_path is None:
+        click.echo(f"Plugin {name} was not found in default locations.")
+        ctx.exit(3)
+
+    root_cfg.gerrit_worktree.link_plugin(plugin_path)
+    plugin = root_cfg.gerrit_worktree.get_plugin(name)
+
+    # sync plugin branch with Gerrit branch
+    gerrit_version = root_cfg.gerrit_worktree.version()
+    plugin.set_version(gerrit_version)
+
+    for internal_dependency in plugin.get_internal_deps():
+        ctx.invoke(install, name=internal_dependency)
+
+    root_cfg.workspace_sync.external_deps()
+    root_cfg.workspace_sync.plugins_bzl()
+    root_cfg.workspace_sync.eclipse_project()
+
+    jar_path = root_cfg.bazel.build_plugin(name)
+
+    # update Gerrit configuration (if needed)
+    root_cfg.site.add_to_config(plugin.config(gerrit_version))
+    # deploy plugin JAR to Gerrit
+    if plugin.is_moduler():
+        root_cfg.site.deploy_module(jar_path)
+    else:
+        root_cfg.site.deploy_plugin(jar_path)

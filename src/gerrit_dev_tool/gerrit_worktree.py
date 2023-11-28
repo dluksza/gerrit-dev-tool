@@ -7,6 +7,7 @@ from typing import Iterable
 
 from gerrit_dev_tool.gerrit_plugin import GerritPlugin
 from gerrit_dev_tool.git_client import GitClient
+from gerrit_dev_tool.plugins_bzl_parser import parse_plugins_bzl
 
 
 class GerritWorktree:
@@ -21,6 +22,11 @@ class GerritWorktree:
     def link_plugin(self, plugin_path: str) -> None:
         (_, name) = os.path.split(plugin_path)
         os.symlink(plugin_path, self._plugin_path(name), target_is_directory=True)
+
+    def is_builtin_plugin(self, plugin_name: str) -> bool:
+        with open(self.plugins_bzl()) as plugins_bzl:
+            plugins = parse_plugins_bzl(plugins_bzl.read())
+            return plugin_name in plugins.core
 
     def get_plugin(self, plugin_name: str) -> GerritPlugin:
         return GerritPlugin(plugin_name, self._plugin_path(plugin_name))
