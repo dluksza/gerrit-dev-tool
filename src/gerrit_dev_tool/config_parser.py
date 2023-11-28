@@ -12,7 +12,7 @@ class _MultiDict(dict):
             if isinstance(current, list):
                 self[key].extend(value)
             else:
-                super(_MultiDict, self).__setitem__(key, [current, *value])
+                super(__class__, self).__setitem__(key, [current, *value])
         else:
             super().__setitem__(key, value)
 

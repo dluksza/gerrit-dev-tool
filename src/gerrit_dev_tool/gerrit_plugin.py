@@ -87,6 +87,6 @@ class GerritPlugin:
                 yield match[1]
 
     def _available_config_versions(self) -> Iterable[str]:
-        for entry in contents(root):
-            if not is_resource(root, entry) and _package_version_matcher.match(entry):
+        for entry in contents(self._resource_package):
+            if not is_resource(self._resource_package, entry) and _package_version_matcher.match(entry):
                 yield entry
