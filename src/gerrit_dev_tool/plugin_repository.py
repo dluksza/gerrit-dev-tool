@@ -23,12 +23,14 @@ class PluginRepository:
         if os.path.isdir(module_path):
             return module_path
 
-        if self._has_repository(Urls.plugin_url(plugin_name)):
-            self._clone(plugin_name, plugin_path)
+        plugin_url = Urls.plugin_url(plugin_name)
+        if self._has_repository(plugin_url):
+            self._clone(plugin_url, plugin_path)
             return plugin_path
 
-        if self._has_repository(Urls.module_url(plugin_name)):
-            self._clone(plugin_name, module_path)
+        module_url = Urls.module_url(plugin_name)
+        if self._has_repository(module_url):
+            self._clone(module_url, module_path)
             return module_path
 
         return None
@@ -38,6 +40,6 @@ class PluginRepository:
 
         return resp.ok
 
-    def _clone(self, plugin_name: str, dst: str) -> None:
-        GitClient.clone(Urls.module_url(plugin_name), dst)
+    def _clone(self, src: str, dst: str) -> None:
+        GitClient.clone(src, dst)
         GitClient.install_commit_msg_hook(dst)
