@@ -83,14 +83,12 @@ def deploy(root_cfg: RootConfig, name: str):
 
     plugin = root_cfg.gerrit_worktree.get_plugin(name)
     jar_path = root_cfg.bazel.build_plugin(name)
-    if root_cfg.gerrit_worktree.is_builtin_plugin(name):
+    if root_cfg.gerrit_worktree.is_builtin_plugin(name) or not plugin.is_lib_module():
         root_cfg.site.deploy_plugin(jar_path)
-    elif plugin.is_lib_module():
-        root_cfg.site.deploy_module(jar_path)
     else:
-        root_cfg.site.deploy_plugin(jar_path)
+        root_cfg.site.deploy_module(jar_path)
 
-    click.echo("deploy plugin to gerrit")
+    click.echo(f"Deployed {name} to Gerrit site.")
 
 
 @click.command
