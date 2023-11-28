@@ -60,6 +60,9 @@ class ConfigParser(configparser.RawConfigParser):
                 section[option_name] = "\n".join(current_list)
 
     def _write_section(self, fp, section_name: str, section_items: str, delimiter: str):
+        if len(section_items) == 0:
+            return
+
         fp.write(f"[{section_name}]\n")
         for key, value in section_items:
             if "\n" in value:
