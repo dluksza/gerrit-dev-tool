@@ -17,19 +17,17 @@ class _MultiDict(dict):
             super().__setitem__(key, value)
 
 
-class ConfigParser(configparser.ConfigParser):
-    def __init__(self, allow_no_value=False, interpolation=configparser.BasicInterpolation()):
+class ConfigParser(configparser.RawConfigParser):
+    def __init__(self, allow_no_value=False):
         super().__init__(
             strict=False,
             dict_type=_MultiDict,
             comment_prefixes=("#",),
             inline_comment_prefixes=("#",),
             empty_lines_in_values=False,
-            interpolation=interpolation,
             allow_no_value=allow_no_value,
             converters={"list": lambda v: v.split("\n")},
         )
-        self._interpolation = interpolation
         self._allow_no_value = allow_no_value
 
     def optionxform(self, optionstr: str) -> str:
@@ -43,7 +41,7 @@ class ConfigParser(configparser.ConfigParser):
         for section in self.sections():
             self._write_section(fp, section, self[section].items(), d)
 
-    def remove_value(self, section_name, option_name, value) -> None:
+    def remove_value(self, section_name: str, option_name: str, value) -> None:
         if section_name not in self:
             return
         section = self[section_name]
@@ -61,17 +59,16 @@ class ConfigParser(configparser.ConfigParser):
                 current_list.pop(index)
                 section[option_name] = "\n".join(current_list)
 
-    def _write_section(self, fp, section_name, section_items, delimiter):
+    def _write_section(self, fp, section_name: str, section_items: str, delimiter: str):
         fp.write(f"[{section_name}]\n")
         for key, value in section_items:
             if "\n" in value:
                 for v in value.split("\n"):
-                    self._write_value(fp, section_name, key, v, delimiter)
+                    self._write_value(fp, key, v, delimiter)
             else:
-                self._write_value(fp, section_name, key, value, delimiter)
+                self._write_value(fp, key, value, delimiter)
 
-    def _write_value(self, fp, section_name, key, value, delimiter):
-        value = self._interpolation.before_write(self, section_name, key, value)
+    def _write_value(self, fp, key: str, value: str, delimiter: str) -> None:
         if value is not None or not self._allow_no_value:
             value = delimiter + str(value).replace("\n", "\n\t")
         else:

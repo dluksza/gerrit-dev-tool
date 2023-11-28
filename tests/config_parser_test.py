@@ -56,9 +56,9 @@ def test_remove_value_from_list():
     parser.read(example_config)
 
     assert len(parser["container"].getlist("javaOptions")) == 2
-    javaOption = parser["container"].getlist("javaOptions")[0]
+    java_option = parser["container"].getlist("javaOptions")[0]
 
-    parser.remove_value("container", "javaOptions", javaOption)
+    parser.remove_value("container", "javaOptions", java_option)
 
     assert len(parser["container"].getlist("javaOptions")) == 1
 
