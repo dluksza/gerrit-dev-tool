@@ -44,11 +44,11 @@ class ConfigParser(configparser.ConfigParser):
             self._write_section(fp, section, self[section].items(), d)
 
     def remove_value(self, section_name, option_name, value) -> None:
-        if not section_name in self:
+        if section_name not in self:
             return
         section = self[section_name]
 
-        if not option_name in section:
+        if option_name not in section:
             return
 
         current = section[option_name]
@@ -62,7 +62,7 @@ class ConfigParser(configparser.ConfigParser):
                 section[option_name] = "\n".join(current_list)
 
     def _write_section(self, fp, section_name, section_items, delimiter):
-        fp.write("[{}]\n".format(section_name))
+        fp.write(f"[{section_name}]\n")
         for key, value in section_items:
             if "\n" in value:
                 for v in value.split("\n"):
@@ -73,7 +73,7 @@ class ConfigParser(configparser.ConfigParser):
     def _write_value(self, fp, section_name, key, value, delimiter):
         value = self._interpolation.before_write(self, section_name, key, value)
         if value is not None or not self._allow_no_value:
-            value = delimiter + str(value).replace('\n', '\n\t')
+            value = delimiter + str(value).replace("\n", "\n\t")
         else:
             value = ""
-        fp.write("\t{}{}\n".format(key, value))
+        fp.write(f"\t{key}{value}\n")

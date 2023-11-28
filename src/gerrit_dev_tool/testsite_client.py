@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import subprocess
-from gerrit_dev_tool.config_parser import ConfigParser
 
+from gerrit_dev_tool.config_parser import ConfigParser
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
 

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os
+
 from gerrit_dev_tool.config_parser import ConfigParser
 
 example_config = "./tests/gerrit.config"
@@ -70,4 +71,4 @@ def test_remove_scalar_value():
 
     parser.remove_value("gerrit", "basePath", "git")
 
-    assert not "basePath" in parser["gerrit"]
+    assert "basePath" not in parser["gerrit"]
