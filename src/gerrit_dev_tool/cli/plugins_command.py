@@ -85,7 +85,7 @@ def deploy(root_cfg: RootConfig, name: str):
     jar_path = root_cfg.bazel.build_plugin(name)
     if root_cfg.gerrit_worktree.is_builtin_plugin(name):
         root_cfg.site.deploy_plugin(jar_path)
-    elif plugin.is_moduler():
+    elif plugin.is_lib_module():
         root_cfg.site.deploy_module(jar_path)
     else:
         root_cfg.site.deploy_plugin(jar_path)
@@ -163,7 +163,7 @@ def install_community_plugin(ctx: click.Context, root_cfg: RootConfig, name: str
     if user_config:
         root_cfg.site.add_to_config(user_config.gerrit_config())
     # deploy plugin JAR to Gerrit
-    if plugin.is_moduler():
+    if plugin.is_lib_module():
         root_cfg.site.deploy_module(jar_path)
     else:
         root_cfg.site.deploy_plugin(jar_path)
