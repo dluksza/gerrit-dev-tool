@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import re
-from importlib import find_loader
 from importlib.resources import contents, files, is_resource
 from typing import Iterable
 
@@ -27,7 +26,7 @@ class GerritPlugin:
         self._resource_package = f"gerrit_dev_tool.plugins.{name}"
 
     def config(self, version: str) -> ConfigParser | None:
-        if not find_loader(self._resource_package):
+        if not self._has_resources():
             return
 
         config_version = negotiate_version(version, self._available_config_versions())
@@ -78,6 +77,12 @@ class GerritPlugin:
 
     def _external_deps_path(self) -> str:
         return os.path.join(self._path, _extenrnal_deps)
+
+    def _has_resources(self) -> bool:
+        try:
+            files(self._resource_package).is_dir()
+        except:
+            return False
 
     def _available_git_versions(self) -> Iterable[str]:
         versions = sorted(GitClient.list_remote_branches(self._path, "origin/stable-*"))
