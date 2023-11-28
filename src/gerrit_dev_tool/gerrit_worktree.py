@@ -62,7 +62,7 @@ class GerritWorktree:
         )
 
     def version(self) -> str:
-        return GitClient.version(self.worktree).replace("origin/", "")
+        return GitClient.version(self.worktree).replace("origin/stable-", "")
 
     def _plugin_path(self, plugin_name: str) -> str:
         return os.path.join(self._plugin_dir, plugin_name)

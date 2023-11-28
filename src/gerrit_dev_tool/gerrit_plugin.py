@@ -80,7 +80,7 @@ class GerritPlugin:
 
     def _has_resources(self) -> bool:
         try:
-            files(self._resource_package).is_dir()
+            return files(self._resource_package).is_dir()
         except:
             return False
 
