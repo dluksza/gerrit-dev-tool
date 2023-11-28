@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import re
-from importlib.resources import files, contents, is_resource
+from importlib import find_loader
+from importlib.resources import contents, files, is_resource
 from typing import Iterable
 
 from gerrit_dev_tool.bazel.parser import BazelParser
@@ -26,6 +27,9 @@ class GerritPlugin:
         self._resource_package = f"gerrit_dev_tool.plugins.{name}"
 
     def config(self, version: str) -> ConfigParser | None:
+        if not find_loader(self._resource_package):
+            return
+
         config_version = negotiate_version(version, self._available_config_versions())
 
         config_resource = f"{self._resource_package}.{config_version}.etc"
@@ -83,7 +87,6 @@ class GerritPlugin:
                 yield match[1]
 
     def _available_config_versions(self) -> Iterable[str]:
-        root = self._resource_package
         for entry in contents(root):
             if not is_resource(root, entry) and _package_version_matcher.match(entry):
                 yield entry
