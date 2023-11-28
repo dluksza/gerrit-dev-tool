@@ -70,14 +70,6 @@ def uninstall(root_cfg: RootConfig, name: str):
 @click.command()
 @click.argument("name")
 @pass_root_config
-def test(root_cfg: RootConfig, name: str):
-    """Run plugin tests."""
-    click.echo("test plugin to gerrit")
-
-
-@click.command()
-@click.argument("name")
-@pass_root_config
 def deploy(root_cfg: RootConfig, name: str):
     """Build and deploy plugin to Gerrit test site."""
 
@@ -114,7 +106,6 @@ def clean(root_cfg: RootConfig):
 plugins.add_command(list_plugins)
 plugins.add_command(install)
 plugins.add_command(uninstall)
-plugins.add_command(test)
 plugins.add_command(deploy)
 plugins.add_command(clean)
 
