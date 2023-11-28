@@ -80,6 +80,16 @@ def test(root_cfg: RootConfig, name: str):
 @pass_root_config
 def deploy(root_cfg: RootConfig, name: str):
     """Build and deploy plugin to Gerrit test site."""
+
+    plugin = root_cfg.gerrit_worktree.get_plugin(name)
+    jar_path = root_cfg.bazel.build_plugin(name)
+    if root_cfg.gerrit_worktree.is_builtin_plugin(name):
+        root_cfg.site.deploy_plugin(jar_path)
+    elif plugin.is_moduler():
+        root_cfg.site.deploy_module(jar_path)
+    else:
+        root_cfg.site.deploy_plugin(jar_path)
+
     click.echo("deploy plugin to gerrit")
 
 
