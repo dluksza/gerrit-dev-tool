@@ -65,12 +65,13 @@ class GerritPlugin:
             result.append(*plugin_names)
         return result
 
-    def set_version(self, version: str) -> None:
+    def set_version(self, version: str) -> str:
         plugin_version = negotiate_version(version, self._available_git_versions())
         if plugin_version == "master":
             GitClient.checkout(self._path, "origin/master")
         else:
             GitClient.checkout(self._path, f"origin/stable-{plugin_version}")
+        return plugin_version
 
     def is_lib_module(self) -> bool:
         return "modules" in os.readlink(self._path)

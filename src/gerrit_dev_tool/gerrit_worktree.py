@@ -2,12 +2,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import os
+import re
 import subprocess
 from typing import Iterable
 
 from gerrit_dev_tool.gerrit_plugin import GerritPlugin
 from gerrit_dev_tool.git_client import GitClient
 from gerrit_dev_tool.plugins_bzl_parser import parse_plugins_bzl
+
+_version_prefix = re.compile(r"^origin/(stable-)?")
 
 
 class GerritWorktree:
@@ -62,7 +65,10 @@ class GerritWorktree:
         )
 
     def version(self) -> str:
-        return GitClient.version(self.worktree).replace("origin/stable-", "")
+        return _version_prefix.sub("", GitClient.version(self.worktree))
+
+    def set_version(self, version: str) -> None:
+        GitClient.checkout(self.worktree, f"origin/{version}")
 
     def _plugin_path(self, plugin_name: str) -> str:
         return os.path.join(self._plugin_dir, plugin_name)
