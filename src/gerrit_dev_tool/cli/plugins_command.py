@@ -57,6 +57,9 @@ def uninstall(root_cfg: RootConfig, name: str):
     plugin = root_cfg.gerrit_worktree.get_plugin(name)
     gerrit_version = root_cfg.gerrit_worktree.version()
     root_cfg.site.remove_from_config(plugin.config(gerrit_version))
+    user_config = root_cfg.recipes.for_plugin(name, gerrit_version)
+    if user_config:
+        root_cfg.site.remove_from_config(user_config.gerrit_config())
     root_cfg.gerrit_worktree.unlink_plugin(name)
     root_cfg.workspace_sync.external_deps()
     root_cfg.workspace_sync.plugins_bzl()
@@ -116,6 +119,9 @@ def install_builtin_plugin(root_cfg: RootConfig, name: str) -> None:
 
     # update Gerrit configuration (if needed)
     root_cfg.site.add_to_config(plugin.config(gerrit_version))
+    user_config = root_cfg.recipes.for_plugin(name, gerrit_version)
+    if user_config:
+        root_cfg.site.add_to_config(user_config.gerrit_config())
     root_cfg.site.deploy_plugin(jar_path)
 
 
@@ -143,6 +149,9 @@ def install_community_plugin(ctx: click.Context, root_cfg: RootConfig, name: str
 
     # update Gerrit configuration (if needed)
     root_cfg.site.add_to_config(plugin.config(gerrit_version))
+    user_config = root_cfg.recipes.for_plugin(name, gerrit_version)
+    if user_config:
+        root_cfg.site.add_to_config(user_config.gerrit_config())
     # deploy plugin JAR to Gerrit
     if plugin.is_moduler():
         root_cfg.site.deploy_module(jar_path)
