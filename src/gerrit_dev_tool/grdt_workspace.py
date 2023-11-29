@@ -12,7 +12,7 @@ _sites_dir = "sites"
 "Name of the default test site"
 _default_site_name = "master"
 "Directory where custom recipes are stored"
-_recepies_dir = "recipes"
+_recipes_dir = "recipes"
 "Main Gerrit working directory"
 _gerrit_dir = "gerrit"
 "The Gerrit's test site location"
@@ -35,7 +35,7 @@ class GrdtWorkspace:
         os.mkdir(workspace.sites)
         os.mkdir(default_site)
         os.mkdir(workspace.gerrit)
-        os.mkdir(workspace.recepies)
+        os.mkdir(workspace.recipes)
         os.symlink(default_site, workspace.testsite, target_is_directory=True)
 
         return workspace
@@ -58,7 +58,7 @@ class GrdtWorkspace:
         self.plugins = os.path.join(root, _plugins_dir)
         self.modules = os.path.join(root, _modules_dir)
         self.sites = os.path.join(root, _sites_dir)
-        self.recepies = os.path.join(root, _recepies_dir)
+        self.recipes = os.path.join(root, _recipes_dir)
         self.testsite = os.path.join(root, _testsite_dir)
         self.gerrit = os.path.join(root, _gerrit_dir)
 

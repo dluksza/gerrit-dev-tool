@@ -29,7 +29,7 @@ class PluginVersionRecipe:
 
 class Recipes:
     def __init__(self, workspace: GrdtWorkspace):
-        self._root = workspace.recepies
+        self._root = workspace.recipes
 
     def for_plugin(self, name: str, version: str) -> PluginVersionRecipe | None:
         plugin_dir = os.path.join(self._root, name)
