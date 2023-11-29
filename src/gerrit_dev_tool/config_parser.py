@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import configparser
+from typing import ItemsView
 
 
 class _MultiDict(dict):
@@ -59,7 +60,7 @@ class ConfigParser(configparser.RawConfigParser):
                 current_list.pop(index)
                 section[option_name] = "\n".join(current_list)
 
-    def _write_section(self, fp, section_name: str, section_items: str, delimiter: str):
+    def _write_section(self, fp, section_name: str, section_items: ItemsView[str, str], delimiter: str):
         if len(section_items) == 0:
             return
 
