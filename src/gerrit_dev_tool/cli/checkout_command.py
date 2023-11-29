@@ -25,6 +25,7 @@ def checkout(root_cfg: RootConfig, version: str):
     if root_cfg.verbose:
         click.echo("Updating external_plugin_deps.bzl")
     root_cfg.workspace_sync.external_deps()
+    root_cfg.workspace_sync.eclipse_project()
 
     if not version in root_cfg.site.sites():
         if root_cfg.verbose:
