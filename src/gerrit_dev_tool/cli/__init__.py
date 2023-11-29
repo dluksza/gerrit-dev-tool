@@ -12,6 +12,7 @@ from gerrit_dev_tool.cli.plugins_command import plugins
 from gerrit_dev_tool.cli.root_config import RootConfig
 from gerrit_dev_tool.cli.run_command import run
 from gerrit_dev_tool.cli.setup_command import setup
+from gerrit_dev_tool.cli.sites_command import sites
 from gerrit_dev_tool.cli.start_command import start
 from gerrit_dev_tool.cli.stop_command import stop
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
@@ -38,3 +39,4 @@ gerrit_dev_tool.add_command(stop)
 gerrit_dev_tool.add_command(checkout)
 gerrit_dev_tool.add_command(plugins)
 gerrit_dev_tool.add_command(setup)
+gerrit_dev_tool.add_command(sites)

@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 import os
+import shutil
 import subprocess
 
 from gerrit_dev_tool.config_parser import ConfigParser
@@ -10,10 +11,33 @@ from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 
 class TestsiteClient:
     def __init__(self, workspace: GrdtWorkspace) -> None:
+        self._sites = workspace.sites
         self._worktree = workspace.gerrit
         self._testsite = workspace.testsite
         self._etc_dir = os.path.join(self._testsite, "etc")
         self._java_path = None
+
+    def current(self) -> str:
+        return os.path.split(os.readlink(self._testsite))[-1]
+
+    def sites(self) -> list[str]:
+        return [item for item in os.listdir(self._sites) if os.path.isdir(os.path.join(self._sites, item))]
+
+    def snapshot(self, dst: str) -> None:
+        dst_path = os.path.join(self._sites, dst)
+        src_path = os.readlink(self._testsite)
+
+        shutil.copytree(src_path, dst_path, symlinks=True)
+
+    def create(self, name: str) -> None:
+        dst_path = os.path.join(self._sites, name)
+        os.mkdir(dst_path)
+        self.init_dev(dst_path)
+
+    def switch(self, name: str) -> None:
+        dst_path = os.path.join(self._sites, name)
+        os.unlink(self._testsite)
+        os.symlink(dst_path, self._testsite, target_is_directory=True)
 
     def get_config(self, config_name) -> str:
         return os.path.join(self._etc_dir, config_name)
@@ -50,11 +74,11 @@ class TestsiteClient:
             check=True,
         )
 
-    def init_dev(self):
-        self._run("init", "--batch", "--no-auto-start", "--dev")
+    def init_dev(self, site=None):
+        self._run("init", "--batch", "--no-auto-start", "--dev", site=site)
 
-    def reindex(self):
-        self._run("reindex")
+    def reindex(self, site=None):
+        self._run("reindex", site=site)
 
     def deploy_plugin(self, plugin_path: str) -> None:
         subprocess.run(
@@ -68,7 +92,7 @@ class TestsiteClient:
             check=True,
         )
 
-    def _run(self, *args):
+    def _run(self, *args, site=None):
         if not self._java_path:
             output_base = subprocess.check_output(
                 ["bazel", "info", "output_base"],  # noqa: S603 S607
@@ -78,8 +102,10 @@ class TestsiteClient:
             )
             self._java_path = os.path.join(self._worktree, output_base.strip(), "external", "local_jdk", "bin", "java")
 
+        dst = os.path.join(self._sites, site) if site else self._testsite
+
         subprocess.run(
-            [self._java_path, "-jar", "bazel-bin/gerrit.war", *args, "-d", self._testsite],  # noqa: S603
+            [self._java_path, "-jar", "bazel-bin/gerrit.war", *args, "-d", dst],  # noqa: S603
             cwd=self._worktree,
             check=True,
         )
