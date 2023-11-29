@@ -74,7 +74,10 @@ class GerritPlugin:
         return plugin_version
 
     def is_lib_module(self) -> bool:
-        return "modules" in os.readlink(self._path)
+        return not self._is_builtin() or "modules" in os.readlink(self._path)
+
+    def _is_builtin(self):
+        return os.path.isdir(self._path)
 
     def _external_deps_path(self) -> str:
         return os.path.join(self._path, _extenrnal_deps)
