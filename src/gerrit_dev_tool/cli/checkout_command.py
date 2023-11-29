@@ -25,3 +25,30 @@ def checkout(root_cfg: RootConfig, version: str):
     if root_cfg.verbose:
         click.echo("Updating external_plugin_deps.bzl")
     root_cfg.workspace_sync.external_deps()
+
+    if not version in root_cfg.site.sites():
+        if root_cfg.verbose:
+            click.echo("Building Gerrit")
+        root_cfg.bazel.build("gerrit")
+
+        if root_cfg.verbose:
+            click.echo("Creating new test site")
+        root_cfg.site.create(version)
+        root_cfg.site.init_dev(version)
+
+    if root_cfg.verbose:
+        click.echo("Switching test site to: {version}")
+    root_cfg.site.switch(version)
+
+    for plugin_name in root_cfg.gerrit_worktree.linked_plugins():
+        plugin = root_cfg.gerrit_worktree.get_plugin(plugin_name)
+        jar_path = root_cfg.bazel.build_plugin(plugin_name)
+        if plugin.is_lib_module():
+            root_cfg.site.deploy_module(jar_path)
+        else:
+            root_cfg.site.deploy_plugin(jar_path)
+
+        root_cfg.site.add_to_config(plugin.config(gerrit_version))
+        user_config = root_cfg.recipes.for_plugin(plugin_name, gerrit_version)
+        if user_config:
+            root_cfg.site.add_to_config(user_config.gerrit_config())
