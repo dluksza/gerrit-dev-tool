@@ -27,7 +27,7 @@ def checkout(root_cfg: RootConfig, version: str):
     root_cfg.workspace_sync.external_deps()
     root_cfg.workspace_sync.eclipse_project()
 
-    if not version in root_cfg.site.sites():
+    if version not in root_cfg.site.sites():
         if root_cfg.verbose:
             click.echo("Building Gerrit")
         root_cfg.bazel.build("gerrit")
