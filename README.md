@@ -188,3 +188,22 @@ The Gerrit and its plugins are complex beasts, the automated approach may not al
  * Only Gerrit open-source plugins can be automatically cloned. You can always manually clone your plugin into `plugins/` or `modules/` directory and use it with `grdt`.
 
  * Using `grdt checkout` will leave your repository in the _[detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head) state_. Gerrit Dev Tool is always checking out the remote branches (eg. `origin/stable-3.9`) which will result in _detached HEAD_, for more information. 
+
+# Contributing
+Contributions can be pushed for review on [GerritHub.io](https://review.gerrithub.io/q/repo:dluksza/gerrit-dev-tool).
+
+Login with your GitHub account into GerritHub.io. Once logged in you can clone the repository and `commit-msg` hook using (**do not forget to replace `$login` in the URL**):
+```shell
+$ git clone "https://$login@review.gerrithub.io/a/dluksza/gerrit-dev-tool" && (cd "gerrit-dev-tool" && f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; curl -Lo $f https://review.gerrithub.io/tools/hooks/commit-msg ; chmod +x $f)
+```
+Instead of cloning, you can also add `review` remote:
+```shell
+$ git remote add review https://$login@review.gerrithub.io/a/dluksza/gerrit-dev-tool
+```
+do not forget to replace `$login` with your account name and install `commit-msg` hook.
+
+Then push to the desired branch.
+```shell
+$ git push review HEAD:refs/for/master
+
+```
