@@ -19,11 +19,11 @@ The main purpose of it is to automate and simplify the tedious parts of Gerrit p
 being installed in your system. See [Gerrit dev documentation](https://gerrit-review.googlesource.com/Documentation/dev-bazel.html#installation) for reference.
 
 Additionally, as `grdt` is not (yet) distributed as PYPI package you'll need to clone this repository first, then do
-```shell
+```console
 $ pip install .
 ```
 for normal installation or
-```shell
+```console
 $ pip install --editable .
 ```
 if you want your code changes being immediately reflected in the cli.
@@ -33,7 +33,7 @@ From this point, you can run `grdt` command anywhere in your system.
 # Initial setup
 
 Before you can leverage any of `grdt` magick you need to create its workspace by calling:
-```shell
+```console
 $ grdt setup
 ```
 which will:
@@ -193,17 +193,17 @@ The Gerrit and its plugins are complex beasts, the automated approach may not al
 Contributions can be pushed for review on [GerritHub.io](https://review.gerrithub.io/q/repo:dluksza/gerrit-dev-tool).
 
 Login with your GitHub account into GerritHub.io. Once logged in you can clone the repository and `commit-msg` hook using (**do not forget to replace `$login` in the URL**):
-```shell
+```console
 $ git clone "https://$login@review.gerrithub.io/a/dluksza/gerrit-dev-tool" && (cd "gerrit-dev-tool" && f=`git rev-parse --git-dir`/hooks/commit-msg ; mkdir -p $(dirname $f) ; curl -Lo $f https://review.gerrithub.io/tools/hooks/commit-msg ; chmod +x $f)
 ```
 Instead of cloning, you can also add `review` remote:
-```shell
+```console
 $ git remote add review https://$login@review.gerrithub.io/a/dluksza/gerrit-dev-tool
 ```
 do not forget to replace `$login` with your account name and install `commit-msg` hook.
 
 Then push to the desired branch.
-```shell
+```console
 $ git push review HEAD:refs/for/master
 
 ```
