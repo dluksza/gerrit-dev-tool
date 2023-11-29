@@ -95,7 +95,7 @@ class TestsiteClient:
     def _run(self, *args, site=None):
         if not self._java_path:
             output_base = subprocess.check_output(
-                ["bazel", "info", "output_base"],  # noqa: S603 S607
+                ["bazelisk", "info", "output_base"],  # noqa: S603 S607
                 text=True,
                 cwd=self._worktree,
                 stderr=subprocess.DEVNULL,

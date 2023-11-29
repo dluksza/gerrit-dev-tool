@@ -122,8 +122,8 @@ def assert_install_commit_mst_hook(cwd, name=_default_workspace):
 def assert_build_gerrit(cwd, name=_default_workspace):
     cwd = os.path.join(cwd, name, "gerrit")
 
-    subprocess.run.assert_any_call(["bazel", "sync"], cwd=cwd, check=True)
-    subprocess.run.assert_any_call(["bazel", "build", "gerrit"], cwd=cwd, check=True)
+    subprocess.run.assert_any_call(["bazelisk", "sync"], cwd=cwd, check=True)
+    subprocess.run.assert_any_call(["bazelisk", "build", "gerrit"], cwd=cwd, check=True)
 
 
 def assert_site_initialized(cwd, name=_default_workspace):
@@ -131,7 +131,7 @@ def assert_site_initialized(cwd, name=_default_workspace):
     cwd = os.path.join(root, "gerrit")
 
     subprocess.check_output.assert_any_call(
-        ["bazel", "info", "output_base"], text=True, cwd=cwd, stderr=subprocess.DEVNULL
+        ["bazelisk", "info", "output_base"], text=True, cwd=cwd, stderr=subprocess.DEVNULL
     )
     subprocess.run.assert_any_call(
         [

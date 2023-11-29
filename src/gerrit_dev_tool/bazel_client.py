@@ -21,7 +21,7 @@ class BazelClient:
 
     def _run(self, *args) -> None:
         subprocess.run(
-            ["bazel", *args],  # noqa: S603 S607
+            ["bazelisk", *args],  # noqa: S603 S607
             cwd=self.workdir,
             check=True,
         )
