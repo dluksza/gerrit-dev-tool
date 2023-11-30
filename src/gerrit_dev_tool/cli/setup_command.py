@@ -6,10 +6,12 @@ import os
 import click
 
 from gerrit_dev_tool.bazel_client import BazelClient
+from gerrit_dev_tool.gerrit_worktree import GerritWorktree
 from gerrit_dev_tool.git_client import GitClient
 from gerrit_dev_tool.grdt_workspace import GrdtWorkspace
 from gerrit_dev_tool.testsite_client import TestsiteClient
 from gerrit_dev_tool.urls import Urls
+from gerrit_dev_tool.workspace_sync import WorkspaceSync
 
 
 @click.command
@@ -21,9 +23,10 @@ from gerrit_dev_tool.urls import Urls
     help="Name of directory where workspace should be initialised.",
 )
 @click.option("--no-build", is_flag=True, help="Don't build Gerrit during setup also implies '--no-init'")
-@click.option("--no-init", is_flag=True, help="Don't initialize Gerrit testsite.")
+@click.option("--no-eclipse", is_flag=True, help="Skip Eclipse project generation")
+@click.option("--no-init", is_flag=True, help="Don't initialize Gerrit testsite")
 @click.pass_context
-def setup(ctx: click.Context, name: str, no_build: bool, no_init: bool):
+def setup(ctx: click.Context, name: str, no_build: bool, no_eclipse: bool, no_init: bool):
     """Setup Gerrit Dev Tool workspace.
 
     Creates a directory structure for Gerrit Dev Tool to operate and clones the Gerrit project.
@@ -45,3 +48,6 @@ def setup(ctx: click.Context, name: str, no_build: bool, no_init: bool):
 
     if not no_build or not no_init:
         TestsiteClient(workspace).init_dev()
+
+    if not no_eclipse:
+        WorkspaceSync(GerritWorktree(workspace.gerrit)).eclipse_project()
