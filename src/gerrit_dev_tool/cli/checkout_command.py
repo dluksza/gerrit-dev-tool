@@ -16,7 +16,7 @@ def checkout(root_cfg: RootConfig, version: str):
     Switches Gerrit, the test site and all installed plugins to a given version.
     """
     if root_cfg.verbose:
-        click.echo("Checkout Gerrit branch: %s" % version)
+        click.echo("> Checkout Gerrit branch: '%s'" % version)
     root_cfg.gerrit_worktree.set_version(version)
     gerrit_version = root_cfg.gerrit_worktree.version()
     plugins = root_cfg.gerrit_worktree.linked_plugins()
@@ -25,10 +25,10 @@ def checkout(root_cfg: RootConfig, version: str):
         plugin = root_cfg.gerrit_worktree.get_plugin(plugin_name)
         plugin_version = plugin.set_version(gerrit_version)
         if root_cfg.verbose:
-            click.echo(f"Checkout {plugin_name} to {plugin_version}")
+            click.echo(f"> Checkout {plugin_name} to '{plugin_version}'")
 
     if root_cfg.verbose:
-        click.echo("Updating external_plugin_deps.bzl")
+        click.echo("> Updating external_plugin_deps.bzl")
     root_cfg.workspace_sync.external_deps()
     root_cfg.workspace_sync.eclipse_project()
 
@@ -43,7 +43,7 @@ def checkout(root_cfg: RootConfig, version: str):
         root_cfg.site.init_dev(version)
 
     if root_cfg.verbose:
-        click.echo("Switching test site to: {version}")
+        click.echo(f"> Switching test site to: '{version}'")
     root_cfg.site.switch(version)
 
     for plugin_name in root_cfg.gerrit_worktree.linked_plugins():
