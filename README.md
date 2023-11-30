@@ -143,7 +143,7 @@ This will just update the symbolic link to point to a given test site name. This
 
 # Plugin auto-configuration
 
-The aim of `grdt` is to provide the required parts of `gerrit.config` for plugins. Things like `gerrit.installModule` or `http.filterClass` _should_ be automatically added by `grdt`. But this relies on the resources distributed together with the `grdt` code, if you find anything missing, please do contribute it!
+The aim of `grdt` is to provide the required parts of `gerrit.config` for plugins. Things like `gerrit.installModule` or `http.filterClass` _should_ be automatically added by `grdt`. But this relies on the resources distributed together with the `grdt` code, if you find anything missing, please do [contribute](#contributing) it!
 
 For custom configurations like `sites` for `virtualhost` or `download` section for `download-commands` plugin (or your closed-sourced plugin) there's a way of extending `grdt` with so-called _recipes_.
 
