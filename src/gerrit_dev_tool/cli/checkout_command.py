@@ -10,6 +10,11 @@ from gerrit_dev_tool.cli.root_config import RootConfig, pass_root_config
 @click.argument("version")
 @pass_root_config
 def checkout(root_cfg: RootConfig, version: str):
+    """
+    Change workspace version.
+
+    Switches Gerrit, the test site and all installed plugins to a given version.
+    """
     if root_cfg.verbose:
         click.echo("Checkout Gerrit branch: %s" % version)
     root_cfg.gerrit_worktree.set_version(version)
