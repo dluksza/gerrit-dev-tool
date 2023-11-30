@@ -19,11 +19,7 @@ class GitClient:
 
     @staticmethod
     def checkout(workdir: str, branch: str) -> None:
-        subprocess.run(
-            ["git", "checkout", "--recurse-submodules", branch],  # noqa: S603 S607
-            cwd=workdir,
-            check=True,
-        )
+        GitClient._exec(workdir, "checkout", "--recurse-submodules", branch)
 
     @staticmethod
     def install_commit_msg_hook(dst: str) -> None:
@@ -37,6 +33,10 @@ class GitClient:
         with open(msg_hook_path, "wb") as msg_hook:
             msg_hook.write(resp.content)
         os.chmod(msg_hook_path, os.stat(msg_hook_path).st_mode | stat.S_IEXEC)
+
+    @staticmethod
+    def restore_file(workdir: str, path: str) -> None:
+        GitClient._git(workdir, "restore", "--worktree", "--staged", path)
 
     @staticmethod
     def list_remote_branches(workdir: str, pattern: str) -> list[str]:
@@ -69,6 +69,14 @@ class GitClient:
                 return version
 
         return ""
+
+    @staticmethod
+    def _git(workdir: str, *cmd: str) -> None:
+        subprocess.run(
+            ["git", *cmd],  # noqa: S603 S607
+            cwd=workdir,
+            check=True,
+        )
 
     @staticmethod
     def _exec(workdir: str, *cmd) -> str:

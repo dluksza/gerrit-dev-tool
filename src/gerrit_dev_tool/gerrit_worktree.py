@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 import os
 import re
-import subprocess
 from typing import Iterable
 
 from gerrit_dev_tool.gerrit_plugin import GerritPlugin
@@ -17,7 +16,6 @@ class GerritWorktree:
     def __init__(self, worktree: str) -> None:
         self.worktree = worktree
         self._plugin_dir = os.path.join(worktree, "plugins")
-        self._dot_git = os.path.join(worktree, ".git")
 
     def has_plugin(self, plugin_name: str) -> bool:
         return os.path.islink(self._plugin_path(plugin_name))
@@ -53,16 +51,10 @@ class GerritWorktree:
         return os.path.join(self.worktree, "tools", "bzl", "plugins.bzl")
 
     def clean_external_plugin_deps(self) -> None:
-        subprocess.run(
-            ["git", "--git-dir", self._dot_git, "restore", "plugins/external_plugin_deps.bzl"],  # noqa: S603 S607
-            check=True,
-        )
+        GitClient.restore_file(self.worktree, "plugins/external_plugin_deps.bzl")
 
     def clean_tools_plugins(self) -> None:
-        subprocess.run(
-            ["git", "--git-dir", self._dot_git, "restore", "tools/bzl/plugins.bzl"],  # noqa: S603 S607
-            check=True,
-        )
+        GitClient.restore_file(self.worktree, "tools/bzl/plugins.bzl")
 
     def version(self) -> str:
         return _version_prefix.sub("", GitClient.version(self.worktree))
