@@ -14,7 +14,7 @@ _version_prefix = re.compile(r"^origin/(stable-)?")
 
 
 class GerritWorktree:
-    def __init__(self, worktree):
+    def __init__(self, worktree: str) -> None:
         self.worktree = worktree
         self._plugin_dir = os.path.join(worktree, "plugins")
         self._dot_git = os.path.join(worktree, ".git")
