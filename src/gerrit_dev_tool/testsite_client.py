@@ -39,6 +39,13 @@ class TestsiteClient:
         os.unlink(self._testsite)
         os.symlink(dst_path, self._testsite, target_is_directory=True)
 
+    def restore(self, name: str) -> None:
+        dst_path = os.readlink(self._testsite)
+        src_path = os.path.join(self._sites, name)
+
+        shutil.rmtree(dst_path)
+        shutil.copytree(src_path, dst_path, symlinks=True)
+
     def get_config(self, config_name) -> str:
         return os.path.join(self._etc_dir, config_name)
 

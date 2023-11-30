@@ -41,6 +41,17 @@ def switch(root_cfg: RootConfig, name: str):
     root_cfg.site.switch(name)
 
 
+@click.command
+@click.argument("name")
+@pass_root_config
+def restore(root_cfg: RootConfig, name: str):
+    """
+    Replace current test site with the "NAME"
+    """
+    root_cfg.site.restore(name)
+
+
 sites.add_command(list_sites)
 sites.add_command(snapshot)
 sites.add_command(switch)
+sites.add_command(restore)
