@@ -72,8 +72,11 @@ class GitClient:
 
     @staticmethod
     def _exec(workdir: str, *cmd) -> str:
-        return subprocess.check_output(
-            cmd,  # noqa: S603
-            cwd=workdir,
-            text=True,
-        )
+        try:
+            return subprocess.check_output(
+                cmd,  # noqa: S603
+                cwd=workdir,
+                text=True,
+            )
+        except subprocess.CalledProcessError:
+            return ""
