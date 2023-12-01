@@ -144,7 +144,8 @@ def install_community_plugin(ctx: click.Context, root_cfg: RootConfig, name: str
     plugin.set_version(gerrit_version)
 
     for internal_dependency in plugin.get_internal_deps():
-        ctx.invoke(install, name=internal_dependency)
+        if not root_cfg.gerrit_worktree.has_plugin(internal_dependency):
+            ctx.invoke(install, name=internal_dependency)
 
     root_cfg.workspace_sync.external_deps()
     root_cfg.workspace_sync.plugins_bzl()
