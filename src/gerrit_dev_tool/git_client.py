@@ -64,7 +64,7 @@ class GitClient:
         stable_branches.reverse()
 
         for version in ["origin/master", *stable_branches]:
-            result = GitClient._exec(workdir, "git", "branch", "--contains", version)
+            result = GitClient._exec(workdir, "git", "branch", "--contains", version, "HEAD")
             if len(result) > 0:
                 return version
 
