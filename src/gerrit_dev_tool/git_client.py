@@ -54,6 +54,9 @@ class GitClient:
 
     @staticmethod
     def version(workdir: str) -> str:
+        """
+        Returns the latest stable version present in current branch.
+        """
         branches = GitClient.list_remote_branches(workdir, "origin/stable-*")
         stable_branches = sorted(
             filter(
