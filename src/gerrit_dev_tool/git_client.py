@@ -19,7 +19,7 @@ class GitClient:
 
     @staticmethod
     def checkout(workdir: str, branch: str) -> None:
-        GitClient._exec(workdir, "checkout", "--recurse-submodules", branch)
+        GitClient._git(workdir, "checkout", "--recurse-submodules", branch)
 
     @staticmethod
     def install_commit_msg_hook(dst: str) -> None:
