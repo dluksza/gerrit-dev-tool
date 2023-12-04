@@ -14,7 +14,7 @@ The main purpose of it is to automate and simplify the tedious parts of Gerrit p
  * git
  * Bazel
  * JDK
- * Python3
+ * Python3 (Python 3.11 dependent)
 
 being installed in your system. See [Gerrit dev documentation](https://gerrit-review.googlesource.com/Documentation/dev-bazel.html#installation) for reference.
 
