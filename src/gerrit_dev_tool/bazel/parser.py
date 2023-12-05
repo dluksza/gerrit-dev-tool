@@ -29,10 +29,16 @@ class _BazelApi:
     def junit_tests(self, *_, **keywords) -> None:
         self.has_unit_tests = True
 
+    def sh_test(self, *_, **_keywords) -> None:
+        pass
+
     def maven_jar(self, name, artifact, sha1, *_, **_keywords) -> None:
         self.dependencies.append(BazelMavenJar(name, artifact, sha1))
 
     def package(self, *_, **_keywords) -> None:
+        pass
+
+    def filegroup(self, *_, **_keywords) -> None:
         pass
 
 
@@ -72,8 +78,10 @@ class BazelParser:
                 "glob": bazel_api.glob,
                 "gerrit_plugin": bazel_api.gerrit_plugin,
                 "junit_tests": bazel_api.junit_tests,
+                "sh_test": bazel_api.sh_test,
                 "java_library": bazel_api.java_library,
                 "package": bazel_api.package,
+                "filegroup": bazel_api.filegroup,
                 "PLUGIN_DEPS": [],
                 "PLUGIN_TEST_DEPS": [],
             },
