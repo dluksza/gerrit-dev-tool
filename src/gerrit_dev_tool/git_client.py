@@ -71,7 +71,7 @@ class GitClient:
             if len(result) > 0:
                 return version
 
-        return ""
+        return "origin/master"
 
     @staticmethod
     def _git(workdir: str, *cmd: str) -> None:
