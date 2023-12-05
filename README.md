@@ -14,7 +14,7 @@ The main purpose of it is to automate and simplify the tedious parts of Gerrit p
  * git
  * Bazel
  * JDK
- * Python3
+ * Python3 (Python 3.11+ dependency)
 
 being installed in your system. See [Gerrit dev documentation](https://gerrit-review.googlesource.com/Documentation/dev-bazel.html#installation) for reference.
 
@@ -204,6 +204,6 @@ do not forget to replace `$login` with your account name and install `commit-msg
 
 Then push to the desired branch.
 ```console
-$ git push review HEAD:refs/for/master
+$ git push review HEAD:refs/for/main
 
 ```
