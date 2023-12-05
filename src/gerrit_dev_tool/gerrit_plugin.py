@@ -32,6 +32,9 @@ class GerritPlugin:
         config_version = negotiate_version(version, self._available_config_versions())
 
         config_resource = f"{self._resource_package}.{config_version}.etc"
+        if not self._has_resources(config_resource):
+            return
+
         config = files(config_resource).joinpath("gerrit.config")
         if config.is_file():
             config_content = config.read_text()
@@ -82,9 +85,9 @@ class GerritPlugin:
     def _external_deps_path(self) -> str:
         return os.path.join(self._path, _extenrnal_deps)
 
-    def _has_resources(self) -> bool:
+    def _has_resources(self, resource=None) -> bool:
         try:
-            return files(self._resource_package).is_dir()
+            return files(resource or self._resource_package).is_dir()
         except:
             return False
 
